@@ -2,7 +2,7 @@ function signals = generate_data(desired_time, desired_fs, desired_noise_level, 
     desired_participants, desired_jitter, desired_peak_fs, desired_peak_loc)
     %% add path to the generate signals script
     % https://data.mrc.ox.ac.uk/data-set/simulated-eeg-data-generator
-    addpath generate_signals\
+    addpath generate_signals/
 
 
 
@@ -10,8 +10,8 @@ function signals = generate_data(desired_time, desired_fs, desired_noise_level, 
     desired_total_trials = desired_participants * desired_trials;
     desired_toi = [0, desired_time];
 
-    n_samples = desired_time * desired_fs;
-    peak_time = desired_peak_loc * desired_fs;
+    n_samples = round(desired_time * desired_fs);
+    peak_time = round(desired_peak_loc * desired_fs);
 
 
     my_noise = noise(n_samples, desired_total_trials, desired_fs);

@@ -42,6 +42,7 @@ pathlength = length(ix)*fs;
 
 % find iqr of absolute latency
 maxlatIQR = median(abs(lat)) + pathlength*std(abs(lat));
+% maybe use iqr to exclude outliers 
 % find the index of the closest value to the 95th percentile
 [~, maxlatIQR] = min(abs(abs(lat) - maxlatIQR));
 % get the value of the 95th percentile

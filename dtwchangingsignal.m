@@ -5,41 +5,62 @@ clear all;
 restoredefaultpath;
 
 %% Parameters of this analysis
-SNR_test = [0.1:0.1:0.9];
-desired_peak_loc_1 = 0.15; % in seconds
-desired_peak_loc_2 = 0.17; % in seconds
-desired_time = 0.25; % in seconds
-num_permutations = 100; % number of times to generate signal per snr level
-
+desired_noise_level = 0.5; % signal to noise ratio
+num_permutations = 10000; % number of times to generate signal per snr level
+signalLens = 0.1:0.05:1; % signal lengths to test in seconds
+latencyDiff = 0.05; % latency difference between signals in seconds
 
 % parameters of synthetic signal
 desired_fs = 500; % sample rate in Hz
-desired_noise_level = 0.1; % SNR ratio
 desired_trials = 1; % number of trials per participant to generate
 desired_participants = 1; % number of participants to generate
 desired_jitter = 0; % jitter in ± ms 
-desired_peak_fs = 5; % frequency of peak in Hz
+desired_peak_fs = 10; % frequency of peak in Hz
 %Controls where the peak is placed in seconds
 
-baseline = round(((min(desired_peak_loc_1, desired_peak_loc_2)-((1/desired_peak_fs)/2))) * desired_fs);
 
-iqr_dtw_distances = zeros(length(SNR_test),1);
-max_dtw_distances = zeros(num_permutations,length(SNR_test));
-max95_dtw_distances = zeros(num_permutations,length(SNR_test));
-peak_latency = zeros(num_permutations,length(SNR_test));
-frac_peak_latency = zeros(num_permutations,length(SNR_test));
-area_latency = zeros(num_permutations,length(SNR_test));
-baseline_dev = zeros(num_permutations,length(SNR_test));
+iqr_dtw_distances = zeros(length(signalLens),1);
+max_dtw_distances = zeros(num_permutations,length(signalLens));
+max95_dtw_distances = zeros(num_permutations,length(signalLens));
+peak_latency = zeros(num_permutations,length(signalLens));
+frac_peak_latency = zeros(num_permutations,length(signalLens));
+area_latency = zeros(num_permutations,length(signalLens));
+baseline_dev = zeros(num_permutations,length(signalLens));
 
 
-for i = 1:length(SNR_test)
+for i = 1:length(signalLens)
     for j = 1:num_permutations
-        signals1 = generate_data(desired_time, desired_fs, SNR_test(i), desired_trials, ...
+
+        
+        desired_time = signalLens(i); % in seconds
+        % random peak loaction 1 (upto 75% of total desired_time in s) then the location 2 is peak location 1 + latencyDiff
+        % loop through this until a suitable peak location is found for location 2 that isnt outside the signal length
+        while true
+            desired_peak_loc_1 = rand(1)*(desired_time*0.65);
+            desired_peak_loc_2 = desired_peak_loc_1 + latencyDiff;
+            
+            if desired_peak_loc_2 <= desired_time*0.75
+                break; % Exit the loop if the peak location is within the signal length
+            end
+        end
+
+        baseline = round(((min(desired_peak_loc_1, desired_peak_loc_2)-((1/desired_peak_fs)/2))) * desired_fs);
+
+        if baseline < 5
+            baseline = 5;
+        end
+
+
+        try
+            signals1 = generate_data(desired_time, desired_fs, desired_noise_level, desired_trials, ...
             desired_participants, desired_jitter, desired_peak_fs,desired_peak_loc_1);
         
         
-        signals2 = generate_data(desired_time, desired_fs, SNR_test(i), desired_trials, ...
-            desired_participants, desired_jitter, desired_peak_fs,desired_peak_loc_2);
+            signals2 = generate_data(desired_time, desired_fs, desired_noise_level, desired_trials, ...
+                desired_participants, desired_jitter, desired_peak_fs,desired_peak_loc_2);
+        catch exception
+            print(exception)
+        end
     
          
         [iqr_dtw_distances(j,i),max_dtw_distances(j,i),max95_dtw_distances(j,i)] = dynamictimewarper(signals1,signals2,desired_fs);
@@ -73,85 +94,87 @@ figure;
 tiledlayout(2,4);
 
 ax1 = nexttile;
-errorbar(SNR_test, iqr_dtw_distances, std_iqr_dtw_distances, 'LineWidth', 2)
+errorbar(signalLens, iqr_dtw_distances, std_iqr_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(iqr_dtw_distances),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('TESTING pathlength*fs*std DTW')
 subtitle("Average latency = " + mean(iqr_dtw_distances) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('DTW distance (ms)')
 
 ax4 = nexttile;
-errorbar(SNR_test, max_dtw_distances, std_max_dtw_distances, 'LineWidth', 2)
+errorbar(signalLens, max_dtw_distances, std_max_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(max_dtw_distances),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('Max DTW distance')
 subtitle("Average latency = " + mean(max_dtw_distances) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('DTW distance (ms)')
 
 ax5 = nexttile;
-errorbar(SNR_test, max95_dtw_distances, std_max95_dtw_distances, 'LineWidth', 2)
+errorbar(signalLens, max95_dtw_distances, std_max95_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(max95_dtw_distances),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('95th Percentile DTW distance')
 subtitle("Average latency = " + mean(max95_dtw_distances) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('DTW distance (ms)')
 
 ax6 = nexttile;
-errorbar(SNR_test, peak_latency, std_peak_latency, 'LineWidth', 2)
+errorbar(signalLens, peak_latency, std_peak_latency, 'LineWidth', 2)
 hold on
 yline(mean(peak_latency),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('Peak latency')
 subtitle("Average latency = " + mean(peak_latency) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('Peak latency (ms)')
 
 ax7 = nexttile;
-errorbar(SNR_test, frac_peak_latency, std_frac_peak_latency, 'LineWidth', 2)
+errorbar(signalLens, frac_peak_latency, std_frac_peak_latency, 'LineWidth', 2)
 hold on
 yline(mean(frac_peak_latency),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('Fractional peak latency')
 subtitle("Average latency = " + mean(frac_peak_latency) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('Fractional peak latency (ms)')
 
 ax2 = nexttile;
-errorbar(SNR_test, area_latency, std_area_latency, 'LineWidth', 2)
+errorbar(signalLens, area_latency, std_area_latency, 'LineWidth', 2)
 hold on
 yline(mean(area_latency),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('50% Fractional area latency')
 subtitle("Average latency = " + mean(area_latency) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('DTW distance (ms)')
 
 ax3 = nexttile;
-errorbar(SNR_test, baseline_dev, std_baseline_dev, 'LineWidth', 2)
+errorbar(signalLens, baseline_dev, std_baseline_dev, 'LineWidth', 2)
 hold on
 yline(mean(baseline_dev),'r--', 'LineWidth',2)
 yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
 title('Baseline deviation latency')
 subtitle("Average latency = " + mean(baseline_dev) + "ms")
-xlabel('NSR')
+xlabel('Signal Length (S)')
 ylabel('DTW distance (ms)')
 
 % set y axis to be the same for all tiles
-linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'y')
+linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy')
 ylim1 = ylim(ax1);
 ylim([ylim1(1) ylim1(2)]);
+xlim1 = xlim(ax1);
+xlim([signalLens(1) signalLens(end)]);
 
 lg  = legend('Latency','Mean Latency','Actual latency');
 lg.FontSize = 16;
 lg.Layout.Tile = 8;
 
-tit = strcat("DTW vs other methods for varying NSR levels for ",string(desired_time*1000),"ms signal");
+tit = strcat("DTW vs other methods for different signal lengths");
 sgt = sgtitle(tit);
 sgt.FontSize = 24;
 sgt.FontWeight = 'Bold';

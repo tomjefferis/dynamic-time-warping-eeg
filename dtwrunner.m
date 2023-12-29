@@ -149,7 +149,7 @@ for i = 1:length(SNR_test)
     tite.FontWeight = 'Bold';
     
     set(gcf,'Position',[0 0 2560 1080])
-    figname = strcat("DTW_results_dist_",string(desired_time*1000),"ms_signal_",string(SNR_test(i)),".png");
+    figname = strcat("Results/DTW_results_dist_",string(desired_time*1000),"ms_signal_",string(SNR_test(i)),".png");
     saveas(gcf,figname)
     
     
