@@ -43,7 +43,7 @@ for i = 1:length(latencyDiff)
 
         baseline = round(((min(desired_peak_loc_1, desired_peak_loc_2)-((1/desired_peak_fs)/2))) * desired_fs);
 
-        if baseline < 5
+        if baseline < 5 
             baseline = 5;
         end
 
