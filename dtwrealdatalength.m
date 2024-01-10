@@ -4,10 +4,9 @@ addpath generate_signals/
 
 %% Config
 desired_noise = 0.2; %Noise to be overlayed on the signal
-offset = [0.01:0.01:0.5]; %Latency offset of the signals
-num_permutations = 1000; %Number of permutations to be performed
-
-
+offset = 0.015; %Latency offset of the signals
+lengths = [0.3:0.05:3]; %Latency offset of the signals
+num_permutations = 10000; %Number of permutations to be performed
 
 %% loading data
 load('grandavg.mat') % grand average for medium stimuli from pattern glare experiment
@@ -18,25 +17,28 @@ cfg.baselinetype = 'db';
 cfg.parameter = 'avg';
 
 grandavg = ft_timelockbaseline(cfg, x); % Gets Oz and baseline corrects
-signal = grandavg.avg(23,:);
+signal = grandavg.avg(23,63:end);
 time = grandavg.time;
 fs = 1/mean(diff(time));
 
-iqr_dtw_distances = zeros(num_permutations,length(offset));
-max_dtw_distances = zeros(num_permutations,length(offset));
-max95_dtw_distances = zeros(num_permutations,length(offset));
-peak_latency = zeros(num_permutations,length(offset));
-frac_peak_latency = zeros(num_permutations,length(offset));
-area_latency = zeros(num_permutations,length(offset));
-area_latency_25 = zeros(num_permutations,length(offset));
+iqr_dtw_distances = zeros(num_permutations,length(lengths));
+max_dtw_distances = zeros(num_permutations,length(lengths));
+max95_dtw_distances = zeros(num_permutations,length(lengths));
+peak_latency = zeros(num_permutations,length(lengths));
+frac_peak_latency = zeros(num_permutations,length(lengths));
+area_latency = zeros(num_permutations,length(lengths));
+area_latency_25 = zeros(num_permutations,length(lengths));
 
 
-for i = 1:length(offset)
+for i = 1:length(lengths)
 
     signal1 = signal;
-    signal2 = [signal(round(offset(i)*fs):end), zeros(1,(length(signal)-length(signal(round(offset(i)*fs):end))))];
+    signal2 = [signal(round(offset*fs):end), zeros(1,(length(signal)-length(signal(round(offset*fs):end))))];
 
-    baseline = fs*abs(cfg.baseline(1)) - (length(signal)-length(signal(round(offset(i)*fs):end)));
+    baseline = fs*abs(cfg.baseline(1))/2 - (length(signal)-length(signal(round(offset*fs):end)));
+
+    signal1 = signal1(1:lengths(i)*fs);
+    signal2 = signal2(1:lengths(i)*fs);
 
 
     for j = 1:num_permutations
@@ -93,100 +95,100 @@ figure;
 tiledlayout(2,4);
 
 ax1 = nexttile;
-errorbar(offset, iqr_dtw_distances, std_iqr_dtw_distances, 'LineWidth', 2)
+errorbar(lengths, iqr_dtw_distances, std_iqr_dtw_distances, 'LineWidth', 2)
 hold on
 %yline(mean(iqr_dtw_distances),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('TESTING pathlength*fs*std DTW')
 subtitle("Squared Distance: " + mean(accuracy_iqr) )
-xlabel('Latency Difference (S)')
-ylabel('DTW distance (ms)')
+xlabel('Length of signal (S)')
+ylabel('DTW distance (S)')
 
 ax4 = nexttile;
-errorbar(offset, max_dtw_distances, std_max_dtw_distances, 'LineWidth', 2)
+errorbar(lengths, max_dtw_distances, std_max_dtw_distances, 'LineWidth', 2)
 hold on
 %yline(mean(max_dtw_distances),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('Max DTW distance')
 subtitle("Squared Distance: " + mean(accuracy_max) )
-xlabel('Latency Difference (S)')
-ylabel('DTW distance (ms)')
+xlabel('Length of signal (S)')
+ylabel('DTW distance (S)')
 
 ax5 = nexttile;
-errorbar(offset, max95_dtw_distances, std_max95_dtw_distances, 'LineWidth', 2)
+errorbar(lengths, max95_dtw_distances, std_max95_dtw_distances, 'LineWidth', 2)
 hold on
 %yline(mean(max95_dtw_distances),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('95th Percentile DTW distance')
 subtitle("Squared Distance: " + mean(accuracy_max95) )
-xlabel('Latency Difference (S)')
-ylabel('DTW distance (ms)')
+xlabel('Length of signal (S)')
+ylabel('DTW distance (S)')
 
 ax6 = nexttile;
-errorbar(offset, peak_latency, std_peak_latency, 'LineWidth', 2)
+errorbar(lengths, peak_latency, std_peak_latency, 'LineWidth', 2)
 hold on
 %yline(mean(peak_latency),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('Peak latency')
 subtitle("Squared Distance: " + mean(accuracy_peak) )
-xlabel('Latency Difference (S)')
+xlabel('Length of signal (S)')
 ylabel('Peak latency (ms)')
 
 ax7 = nexttile;
-errorbar(offset, frac_peak_latency, std_frac_peak_latency, 'LineWidth', 2)
+errorbar(lengths, frac_peak_latency, std_frac_peak_latency, 'LineWidth', 2)
 hold on
 %yline(mean(frac_peak_latency),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('Fractional peak latency')
 subtitle("Squared Distance: " + mean(accuracy_frac_peak) )
-xlabel('Latency Difference (S)')
+xlabel('Length of signal (S)')
 ylabel('Fractional peak latency (ms)')
 
 ax2 = nexttile;
-errorbar(offset, area_latency, std_area_latency, 'LineWidth', 2)
+errorbar(lengths, area_latency, std_area_latency, 'LineWidth', 2)
 hold on
 %yline(mean(area_latency),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('50% Fractional area latency')
 subtitle("Squared Distance: " + mean(accuracy_area) )
-xlabel('Latency Difference (S)')
-ylabel('DTW distance (ms)')
+xlabel('Length of signal (S)')
+ylabel('DTW distance (S)')
 
 ax3 = nexttile;
-errorbar(offset, baseline_dev, std_baseline_dev, 'LineWidth', 2)
+errorbar(lengths, baseline_dev, std_baseline_dev, 'LineWidth', 2)
 hold on
 %yline(mean(baseline_dev),'r--', 'LineWidth',2)
 %yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
-plot(offset,offset,'r--', 'LineWidth',2)
+yline(offset, 'r--', 'LineWidth',2)
 title('Baseline deviation latency')
 subtitle("Squared Distance: " + mean(accuracy_baseline) )
-xlabel('Latency Difference (S)')
-ylabel('DTW distance (ms)')
+xlabel('Length of signal (S)')
+ylabel('DTW distance (S)')
 
 % set y axis to be the same for all tiles
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy')
 ylim1 = ylim(ax1);
 ylim([ylim1(1) ylim1(2)]);
 xlim1 = xlim(ax1);
-xlim([offset(1) offset(end)]);
+xlim([lengths(1) lengths(end)]);
 
 lg  = legend('Latency','Actual latency');
 lg.FontSize = 16;
 lg.Layout.Tile = 8;
 
-tit = strcat("DTW vs other methods for different latency differences");
+tit = strcat("DTW vs other methods for different length signals");
 sgt = sgtitle(tit);
 sgt.FontSize = 24;
 sgt.FontWeight = 'Bold';
 
 set(gcf,'Position',[0 0 1920 720])
-figname = strcat("Results/real_world_data_signal.png");
+figname = strcat("Results/real_world_data_signal_vary_length_smalloffset.png");
 saveas(gcf,figname)
 
 

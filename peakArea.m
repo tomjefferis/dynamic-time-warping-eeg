@@ -26,16 +26,26 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
         try
             component_end_1 = find(dat1 >= dat1(component_start_1), 1, 'last');
         catch 
-            component_start_1 = baseline;
-            component_end_1 = find(dat1 >= dat1(component_start_1), 1, 'last');
+            try
+                component_start_1 = baseline;
+                component_end_1 = find(dat1 >= dat1(component_start_1), 1, 'last');
+             catch 
+                component_start_1 = baseline;
+                component_end_1 = dat1(end);
+            end
         end
 
         component_start_2 = find(dat2 > dat2_base_mean + 2*dat2_base_std, 1, 'first');
         try
             component_end_2 = find(dat2 >= dat2(component_start_2), 1, 'last');
         catch 
+            try
             component_start_2 = baseline;
             component_end_2 = find(dat2 >= dat2(component_start_2), 1, 'last');
+            catch 
+                component_start_2 = baseline;
+                component_end_2 = dat2(end);
+            end
         end
 
 
