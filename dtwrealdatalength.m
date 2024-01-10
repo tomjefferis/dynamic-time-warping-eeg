@@ -1,6 +1,7 @@
 clear all
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 addpath generate_signals/
+addpath funcs/
 
 %% Config
 desired_noise = 0.2; %Noise to be overlayed on the signal

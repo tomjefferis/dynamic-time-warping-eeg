@@ -3,6 +3,7 @@
 %% setting up paths to plugins and default folder
 clear all;
 restoredefaultpath;
+addpath funcs/
 
 %% Parameters of this analysis
 desired_noise_level = 0.5; % signal to noise ratio

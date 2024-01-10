@@ -3,6 +3,7 @@
 %% setting up paths to plugins and default folder
 clear all;
 restoredefaultpath;
+addpath funcs/
 
 %% Parameters of this analysis
 SNR_test = [0.1:0.1:0.9];
