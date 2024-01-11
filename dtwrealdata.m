@@ -172,8 +172,8 @@ ylabel('DTW distance (ms)')
 
 % set y axis to be the same for all tiles
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy')
-ylim1 = ylim(ax1);
-ylim([ylim1(1) ylim1(2)]);
+%ylim1 = ylim(ax1);
+%ylim([ylim1(1) ylim1(2)]);
 xlim1 = xlim(ax1);
 xlim([offset(1) offset(end)]);
 

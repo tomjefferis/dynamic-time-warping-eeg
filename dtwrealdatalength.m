@@ -6,7 +6,7 @@ addpath funcs/
 %% Config
 desired_noise = 0.2; %Noise to be overlayed on the signal
 offset = 0.015; %Latency offset of the signals
-lengths = [0.3:0.05:3]; %Latency offset of the signals
+lengths = [0.3:0.1:3]; %Latency offset of the signals
 num_permutations = 10000; %Number of permutations to be performed
 
 %% loading data
@@ -174,8 +174,8 @@ ylabel('DTW distance (S)')
 
 % set y axis to be the same for all tiles
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy')
-ylim1 = ylim(ax1);
-ylim([ylim1(1) ylim1(2)]);
+%ylim1 = ylim(ax1);
+%ylim([ylim1(1) ylim1(2)]);
 xlim1 = xlim(ax1);
 xlim([lengths(1) lengths(end)]);
 
