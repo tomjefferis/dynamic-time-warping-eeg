@@ -4,7 +4,7 @@ function Makinen1a
 %
 % function plots the Figure 1a from the Makinen et al. (2005)
 
-trials = 30;
+trials = 1;
 
 mysig = Makinen (400, trials, 1000, 175);
 mysig = reshape (mysig, 400, trials);
