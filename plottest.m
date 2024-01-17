@@ -1,5 +1,8 @@
 %% ERP Signal Generator with Sliders
 
+addpath generate_signals/
+addpath funcs/
+
 % Parameters
 sample_rate = 250;
 signal_duration = 0.6;
@@ -108,6 +111,7 @@ function plotERP(sample_rate, signal_duration, baseline_duration, variance, SNR,
 
     % Plot ERP signal
     plot(erp_plot, time, erp_signal, 'LineWidth', 2);
+    xlim([0, time(end)])
     title(erp_plot, 'ERP Signal');
     xlabel(erp_plot, 'Time');
     ylabel(erp_plot, 'Amplitude');
