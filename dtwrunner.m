@@ -3,6 +3,7 @@
 %% setting up paths to plugins and default folder
 clear all;
 restoredefaultpath;
+addpath funcs/
 
 %% Parameters of this analysis
 SNR_test = [0.1:0.1:0.9];
@@ -31,7 +32,7 @@ for i = 1:length(SNR_test)
     area_latency_25 = zeros(num_permutations,1);
 
 
-    parfor j = 1:num_permutations
+    for j = 1:num_permutations
         signals1 = generate_data(desired_time, desired_fs, SNR_test(i), desired_trials, ...
             desired_participants, desired_jitter, desired_peak_fs,desired_peak_loc_1);
         
