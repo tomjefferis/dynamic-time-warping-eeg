@@ -7,7 +7,7 @@ addpath funcs/;
 addpath generate_signals/;
 
 
-SNR = 0.8; % signal to noise ratio
+SNR = 0.2; % signal to noise ratio
 num_permutations = 100; % number of times to generate signal per snr level
 signalLens = [0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]; % signal lengths to test in seconds
 latencyDiffs = -0.1:0.01:0.1; % latency difference between signals in seconds
@@ -43,8 +43,16 @@ for i = 1:length(signalLens)
         for k = 1:num_permutations
 
 
-            [sig1, sig2] = ERPGenerate(signalLen, fs, variance, SNR, baselineFun, latencyDiff);
-
+            desired_peak_loc_1 = rand(1)*(signalLen*0.5) + baselineFun*1.5;
+            desired_peak_loc_2 = desired_peak_loc_1 - latencyDiff;
+            
+            sig1 = generate_data(signalLen, fs, SNR, 1, ...
+                1, 0, 10,desired_peak_loc_1);
+            
+            
+            sig2 = generate_data(signalLen, fs, SNR, 1, ...
+                1, 0, 10,desired_peak_loc_2);
+            
            
 
             baselines = baselineFun*fs;
