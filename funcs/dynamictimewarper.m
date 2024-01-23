@@ -1,4 +1,4 @@
-function [maxlatIQR, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
+function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
 % Dynamic Time Warper is a function that gets the DTW distance for the
 % electrode and computes the Fractional peak, peak, and area of the erp
 % component
@@ -27,7 +27,7 @@ for i = 1:size(data1,2)
     %ylabel("Query Signal")
     % make plot 1080x1080 pixels
     %set(gcf,'Position',[0 0 1080 1080])
-    arealatency(i) = (trapz(ix,iy) - trapz([ix(1) ix(end)],[iy(1) iy(end)]))/trapz([ix(1) ix(end)],[iy(1) iy(end)]);
+    %arealatency(i) = (trapz(ix,iy) - trapz([ix(1) ix(end)],[iy(1) iy(end)]))/trapz([ix(1) ix(end)],[iy(1) iy(end)]);
 end
 
 fs = 1/fs;
@@ -41,13 +41,13 @@ pathlength = length(ix)*fs;
 
 
 % find iqr of absolute latency
-maxlatIQR = median(abs(lat)) + pathlength*std(abs(lat));
+maxlatmedian = median(lat);
 % maybe use iqr to exclude outliers 
 % find the index of the closest value to the 95th percentile
-[~, maxlatIQR] = min(abs(abs(lat) - maxlatIQR));
+[~, maxlatmedian] = min(abs(abs(lat) - maxlatmedian));
 % get the value of the 95th percentile
-maxlatIQR = lat(maxlatIQR);
-maxlatIQR = maxlatIQR*fs;
+maxlatmedian = lat(maxlatmedian);
+maxlatmedian = maxlatmedian*fs;
 
 
 [~, maxlatIDX] = max(abs(lat));
