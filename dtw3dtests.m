@@ -8,10 +8,10 @@ addpath generate_signals/;
 
 
 SNR = 0.2; % signal to noise ratio
-num_permutations = 100; % number of times to generate signal per snr level
+num_permutations = 10; % number of times to generate signal per snr level
 signalLens = [0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]; % signal lengths to test in seconds
 latencyDiffs = -0.1:0.01:0.1; % latency difference between signals in seconds
-fs = 1000; % sampling frequency
+fs = 250; % sampling frequency
 variance = 0.1; % variance of peaks in signal
 baseline = 0.2; % baseline of signal in seconds
 
