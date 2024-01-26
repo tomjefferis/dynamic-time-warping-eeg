@@ -5,13 +5,13 @@ clear all;
 restoredefaultpath;
 addpath funcs/;
 addpath generate_signals/;
+addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
-
-SNR = 0.2; % signal to noise ratio
-num_permutations = 10; % number of times to generate signal per snr level
-signalLens = [0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1]; % signal lengths to test in seconds
+SNR = 0.8; % signal to noise ratio
+num_permutations = 100; % number of times to generate signal per snr level
+signalLens = [0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.25 1.5 2 2.5 3]; % signal lengths to test in seconds
 latencyDiffs = -0.1:0.01:0.1; % latency difference between signals in seconds
-fs = 250; % sampling frequency
+fs = 1000; % sampling frequency
 variance = 0.1; % variance of peaks in signal
 baseline = 0.2; % baseline of signal in seconds
 
@@ -43,16 +43,8 @@ for i = 1:length(signalLens)
         for k = 1:num_permutations
 
 
-            desired_peak_loc_1 = rand(1)*(signalLen*0.5) + baselineFun*1.5;
-            desired_peak_loc_2 = desired_peak_loc_1 - latencyDiff;
-            
-            sig1 = generate_data(signalLen, fs, SNR, 1, ...
-                1, 0, 10,desired_peak_loc_1);
-            
-            
-            sig2 = generate_data(signalLen, fs, SNR, 1, ...
-                1, 0, 10,desired_peak_loc_2);
-            
+            signalLen = signalLen - baselineFun;
+            [sig1, sig2] = ERPGenerate(signalLen, fs, variance, SNR, baseline, latencyDiff);
            
 
             baselines = baselineFun*fs;
@@ -106,7 +98,7 @@ clim([mincolor maxcolor]);
 
 ax2 = subplot(2,4,2);
 surf(latencyDiffs, signalLens, max_dtw_mse);
-title('Max DTW');
+title('Weighted Median DTW');
 xlabel('Latency Difference (s)');
 ylabel('Signal Length (s)');
 zlabel('MSE');
@@ -191,3 +183,4 @@ set(gca, 'ZLim', [0 0.1]);
 set(findall(gcf,'-property','FontSize'),'FontSize',18);
 
 
+saveas(gcf, 'Results/3d_DTW_MSE.png');
