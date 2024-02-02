@@ -45,13 +45,14 @@ function erp_signal = genericERP(sample_rate, signal_duration, baseline_duration
 
         baseline = zeros(1, round(baseline_duration * sample_rate));
 
-        erp_signal = baseline;
+        erp_signal = zeros(1, round(signal_duration * sample_rate));
         for i = 1:params.n_peaks
             erp_signal = erp_signal + peaks{i};
         end
         for i = 1:params.n_troughs
             erp_signal = erp_signal + troughs{i};
         end
+        erp_signal = [baseline, erp_signal];
         my_noise = noise(length(erp_signal), 1, sample_rate);
         erp_signal = erp_signal + (1-SNR)*my_noise;
 
@@ -63,6 +64,10 @@ end
 
 function [valid,params] =  checkParams(params)
     valid = false;
+    if isstruct(params) == 0
+        error('Params must be a struct');
+        return;
+    end
 
     if ~isfield(params, 'n_peaks')
         params.n_peaks = 3;
@@ -76,16 +81,22 @@ function [valid,params] =  checkParams(params)
     if ~isfield(params, 'peak_widths')
         params.peak_widths = [0.01, 0.01, 0.1];
     end
-    if length(params.peak_amplitudes) ~= params.n_peaks || length(params.peak_latencies) ~= params.n_peaks ...
-        || length(params.peak_widths) ~= params.n_peaks
-        error('Length of peak_amplitudes, peak_latencies, and peak_widths must be equal to n_peaks');
-        return;
+    
+
+    if length(params.peak_amplitudes) < params.n_peaks || length(params.peak_latencies) < params.n_peaks || length(params.peak_widths) < params.n_peaks
+        for i = 1:params.n_peaks
+            params.peak_amplitudes(i) = 0.7 + 1.3*rand();
+            params.peak_latencies(i) = 0.05 + 0.25*rand();
+            params.peak_widths(i) = 0.01 + 0.1*rand();
+        end
     end
+
+    
     if ~isfield(params, 'n_troughs')
         params.n_troughs = 2;
     end
     if ~isfield(params, 'trough_amplitudes')
-        params.trough_amplitudes = [-1.25, -1.25];
+        params.trough_amplitudes = [-1.25, 0];
     end
     if ~isfield(params, 'trough_latencies')
         params.trough_latencies = [0.085, 0.2];
@@ -93,11 +104,15 @@ function [valid,params] =  checkParams(params)
     if ~isfield(params, 'trough_widths')
         params.trough_widths = [0.015, 0.05];
     end
-    if length(params.trough_amplitudes) ~= params.n_troughs || length(params.trough_latencies) ~= params.n_troughs ...
-        || length(params.trough_widths) ~= params.n_troughs
-        error('Length of trough_amplitudes, trough_latencies, and trough_widths must be equal to n_troughs');
-        return;
+
+    if length(params.trough_amplitudes) < params.n_troughs || length(params.trough_latencies) < params.n_troughs || length(params.trough_widths) < params.n_troughs
+        for i = 1:params.n_troughs
+            params.trough_amplitudes(i) = -1.25 + 1.25*rand();
+            params.trough_latencies(i) = 0.085 + 0.25*rand();
+            params.trough_widths(i) = 0.015 + 0.1*rand();
+        end
     end
+    
 
     for i = 1:params.n_peaks
         if params.peak_amplitudes(i) < 0
