@@ -8,8 +8,8 @@ addpath generate_signals/;
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
 SNR = 0.8; % signal to noise ratio
-num_permutations = 100; % number of times to generate signal per snr level
-signalLens = [0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.25 1.5 2 2.5 3]; % signal lengths to test in seconds
+num_permutations = 1000; % number of times to generate signal per snr level
+signalLens = [0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.25 1.5 2 2.5 3]; % signal lengths to test in seconds
 latencyDiffs = -0.1:0.01:0.1; % latency difference between signals in seconds
 fs = 1000; % sampling frequency
 variance = 0.1; % variance of peaks in signal
@@ -84,7 +84,7 @@ mincolor = 0;
 
 % subplots 2,4 with surf plots view 2 
 figure();
-ax1 = subplot(2,4,1);
+ax1 = subplot(2,3,1);
 surf(latencyDiffs, signalLens, iqr_dtw_mse);
 title('Median DTW');
 xlabel('Latency Difference (s)');
@@ -96,7 +96,7 @@ subtitles = sprintf('Average MSE: %.4f', mean(iqr_dtw_mse(:)));
 subtitle(subtitles);
 clim([mincolor maxcolor]);
 
-ax2 = subplot(2,4,2);
+ax2 = subplot(2,3,2);
 surf(latencyDiffs, signalLens, max_dtw_mse);
 title('Weighted Median DTW');
 xlabel('Latency Difference (s)');
@@ -108,19 +108,19 @@ subtitles = sprintf('Average MSE: %.4f', mean(max_dtw_mse(:)));
 subtitle(subtitles);
 clim([mincolor maxcolor]);
 
-ax3 = subplot(2,4,3);
-surf(latencyDiffs, signalLens, max95_dtw_mse);
-title('Max 95% DTW');
-xlabel('Latency Difference (s)');
-ylabel('Signal Length (s)');
-zlabel('MSE');
-view(2);
-shading interp;
-subtitles = sprintf('Average MSE: %.4f', mean(max95_dtw_mse(:)));
-subtitle(subtitles);
-clim([mincolor maxcolor]);
+%ax3 = subplot(2,4,3);
+%surf(latencyDiffs, signalLens, max95_dtw_mse);
+%title('Max 95% DTW');
+%xlabel('Latency Difference (s)');
+%ylabel('Signal Length (s)');
+%zlabel('MSE');
+%view(2);
+%shading interp;
+%subtitles = sprintf('Average MSE: %.4f', mean(max95_dtw_mse(:)));
+%subtitle(subtitles);
+%clim([mincolor maxcolor]);
 
-ax4 = subplot(2,4,4);
+ax4 = subplot(2,3,3);
 surf(latencyDiffs, signalLens, peak_latency_mse);
 title('Peak Latency');
 xlabel('Latency Difference (s)');
@@ -132,7 +132,7 @@ subtitles = sprintf('Average MSE: %.4f', mean(peak_latency_mse(:)));
 subtitle(subtitles);
 clim([mincolor maxcolor]);
 
-ax5 = subplot(2,4,5);
+ax5 = subplot(2,3,4);
 surf(latencyDiffs, signalLens, frac_peak_latency_mse);
 title('Fractional Peak Latency');
 xlabel('Latency Difference (s)');
@@ -144,7 +144,7 @@ subtitles = sprintf('Average MSE: %.4f', mean(frac_peak_latency_mse(:)));
 subtitle(subtitles);
 clim([mincolor maxcolor]);
 
-ax6 = subplot(2,4,6);
+ax6 = subplot(2,3,5);
 surf(latencyDiffs, signalLens, area_latency_mse);
 title('Area Latency');
 xlabel('Latency Difference (s)');
@@ -158,7 +158,7 @@ subtitle(subtitles);
 clim([mincolor maxcolor]);
 
 
-ax7 = subplot(2,4,7);
+ax7 = subplot(2,3,6);
 surf(latencyDiffs, signalLens, baseline_dev_mse);
 title('Baseline Deviation');
 xlabel('Latency Difference (s)');
@@ -172,13 +172,13 @@ subtitle(subtitles);
 clim([mincolor maxcolor]);
 
 % shared colourbar and axis limits
-linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
+linkaxes([ax1,ax2,ax4,ax5,ax6,ax7],'xy');
 ylim([signalLens(1) signalLens(end)]);
 h = colorbar;
 clim([mincolor maxcolor]);
 ylabel(h, 'MSE');
 set(h, 'Position', [.92 .11 .02 .8150]);
-set(gcf, 'Position', [0 0 2000 1000]); % Increase the figure size
+set(gcf, 'Position', [0 0 1500 1000]); % Increase the figure size
 set(gca, 'ZLim', [0 0.1]);
 set(findall(gcf,'-property','FontSize'),'FontSize',18);
 

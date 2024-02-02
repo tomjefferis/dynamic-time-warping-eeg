@@ -12,7 +12,7 @@ end
 %% load data config
 variance = 0.1; % variance of peaks in signal
 baseline = 0.2; % baseline of signal in seconds
-signalLens = [0.15 :0.01: 1.5]; % signal lengths to test in seconds
+signalLens = [0.6 :0.01: 1.5]; % signal lengths to test in seconds
 latencydiff = 0.05; % latency difference between two signals in seconds
 fs = 1000; % sampling frequency in Hz
 SNR = 0.8; % signal to noise ratio

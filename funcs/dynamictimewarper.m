@@ -49,6 +49,7 @@ for i = 1:length(ix)
     for j = 1:avgZscore
         weightedLats = [weightedLats;lat(i)];
     end
+end
     % get the median from this array
     medianWeightedLat= median(weightedLats);
     % find the closest actual latency in the warping path
@@ -56,7 +57,7 @@ for i = 1:length(ix)
     maxWeightedlatmedian = lat(maxWeightedlatmedian);
     % turn into seconds
     maxlat = maxWeightedlatmedian*fs;
-end
+
 
 % 95th percentile of absolute latency
 maxlat95 = prctile(abs(lat),95);
