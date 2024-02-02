@@ -23,7 +23,7 @@ function erp_signal = genericERP(sample_rate, signal_duration, baseline_duration
         erp_signal = erp_signal + (1-SNR)*my_noise;
     else
         % check params
-        [valid,params] = checkParams(params);
+        [valid,params] = checkParams(sample_rate, signal_duration, baseline_duration, variance, SNR, params);
         if ~valid
             error('Invalid parameters');
             return;
@@ -62,7 +62,7 @@ end
 
 
 
-function [valid,params] =  checkParams(params)
+function [valid,params] =  checkParams(~, signal_duration, ~, ~, ~, params)
     valid = false;
     if isstruct(params) == 0
         error('Params must be a struct');
@@ -86,7 +86,8 @@ function [valid,params] =  checkParams(params)
     if length(params.peak_amplitudes) < params.n_peaks || length(params.peak_latencies) < params.n_peaks || length(params.peak_widths) < params.n_peaks
         for i = 1:params.n_peaks
             params.peak_amplitudes(i) = 0.7 + 1.3*rand();
-            params.peak_latencies(i) = 0.05 + 0.25*rand();
+            % anywhere in signal_duration
+            params.peak_latencies(i) = signal_duration*rand();
             params.peak_widths(i) = 0.01 + 0.1*rand();
         end
     end
@@ -108,7 +109,7 @@ function [valid,params] =  checkParams(params)
     if length(params.trough_amplitudes) < params.n_troughs || length(params.trough_latencies) < params.n_troughs || length(params.trough_widths) < params.n_troughs
         for i = 1:params.n_troughs
             params.trough_amplitudes(i) = -1.25 + 1.25*rand();
-            params.trough_latencies(i) = 0.085 + 0.25*rand();
+            params.trough_latencies(i) = signal_duration*rand();
             params.trough_widths(i) = 0.015 + 0.1*rand();
         end
     end
