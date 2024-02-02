@@ -40,7 +40,7 @@ maxlatmedian = maxlatmedian*fs;
 
 % weighted median using zscores of each point on dtw path
 weightedLats = [];
-% for every point on thw warping path
+% for every point on the warping path
 for i = 1:length(ix)
     % avgZscore = rounded abs zscores for each point in original signal
     % from correlating warping path
@@ -53,7 +53,7 @@ end
     % get the median from this array
     medianWeightedLat= median(weightedLats);
     % find the closest actual latency in the warping path
-    [~, maxWeightedlatmedian] = min(abs(abs(lat) - maxlatmedian));
+    [~, maxWeightedlatmedian] = min(abs(abs(lat) - medianWeightedLat));
     maxWeightedlatmedian = lat(maxWeightedlatmedian);
     % turn into seconds
     maxlat = maxWeightedlatmedian*fs;

@@ -8,8 +8,8 @@ addpath funcs/;
 addpath generate_signals/;
 
 %% Parameters of this analysis
-desired_noise_level = 0.5; % signal to noise ratio
-num_permutations = 10; % number of times to generate signal per snr level
+desired_noise_level = 0.8; % signal to noise ratio
+num_permutations = 1000; % number of times to generate signal per snr level
 signalLens = 0.3:0.05:1; % signal lengths to test in seconds
 latencyDiff = 0.05; % latency difference between signals in seconds
 variance = 0.1;
@@ -34,30 +34,31 @@ baseline_dev = zeros(num_permutations,length(signalLens));
 for i = 1:length(signalLens)
     for j = 1:num_permutations
         
-        baseline = baselineTime *desired_fs;
+        
         
         desired_time = signalLens(i); % in seconds
         % random peak loaction 1 (upto 75% of total desired_time in s) then the location 2 is peak location 1 + latencyDiff
         % loop through this until a suitable peak location is found for location 2 that isnt outside the signal length
-
-        
-        if baseline < 5
-            baseline = 5;
+        signalLen = desired_time;
+        if (baselineTime > signalLen/4) 
+            baselineFun = signalLen*0.1;
+        else
+            baselineFun = baselineTime;
         end
-
+        
 
         
-        signalLen = desired_time - baseline;
-        [signals1, signals2] = ERPGenerate(signalLen, desired_fs, variance, desired_noise_level, baseline, latencyDiff);
+        
+        [signals1, signals2] = ERPGenerate(signalLen, desired_fs, variance, desired_noise_level, baselineFun, latencyDiff);
        
-        
+        baselines = baselineFun*desired_fs;
     
          
         [iqr_dtw_distances(j,i),max_dtw_distances(j,i),max95_dtw_distances(j,i)] = dynamictimewarper(signals1,signals2,desired_fs);
         [peak_latency(j,i)] = peaklatency(signals1,signals2, desired_fs);
         [frac_peak_latency(j,i)] = fracpeaklatency(signals1,signals2, desired_fs);
-        [area_latency(j,i)] = peakArea(signals1,signals2, desired_fs, 0.5,baseline);
-        [baseline_dev(j,i)] = baselineDeviation(signals1,signals2, desired_fs, baseline, 2);
+        [area_latency(j,i)] = peakArea(signals1,signals2, desired_fs, 0.5,baselines);
+        [baseline_dev(j,i)] = baselineDeviation(signals1,signals2, desired_fs, baselines, 2);
     
     end
 end
@@ -87,7 +88,7 @@ ax1 = nexttile;
 errorbar(signalLens, iqr_dtw_distances, std_iqr_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(iqr_dtw_distances),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('Median DTW')
 subtitle("Average latency = " + mean(iqr_dtw_distances) + "ms")
 xlabel('Signal Length (S)')
@@ -97,7 +98,7 @@ ax4 = nexttile;
 errorbar(signalLens, max_dtw_distances, std_max_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(max_dtw_distances),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('Weighted Median DTW')
 subtitle("Average latency = " + mean(max_dtw_distances) + "ms")
 xlabel('Signal Length (S)')
@@ -107,7 +108,7 @@ ax5 = nexttile;
 errorbar(signalLens, max95_dtw_distances, std_max95_dtw_distances, 'LineWidth', 2)
 hold on
 yline(mean(max95_dtw_distances),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('95th Percentile DTW distance')
 subtitle("Average latency = " + mean(max95_dtw_distances) + "ms")
 xlabel('Signal Length (S)')
@@ -117,7 +118,7 @@ ax6 = nexttile;
 errorbar(signalLens, peak_latency, std_peak_latency, 'LineWidth', 2)
 hold on
 yline(mean(peak_latency),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('Peak latency')
 subtitle("Average latency = " + mean(peak_latency) + "ms")
 xlabel('Signal Length (S)')
@@ -127,7 +128,7 @@ ax7 = nexttile;
 errorbar(signalLens, frac_peak_latency, std_frac_peak_latency, 'LineWidth', 2)
 hold on
 yline(mean(frac_peak_latency),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('Fractional peak latency')
 subtitle("Average latency = " + mean(frac_peak_latency) + "ms")
 xlabel('Signal Length (S)')
@@ -137,7 +138,7 @@ ax2 = nexttile;
 errorbar(signalLens, area_latency, std_area_latency, 'LineWidth', 2)
 hold on
 yline(mean(area_latency),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('50% Fractional area latency')
 subtitle("Average latency = " + mean(area_latency) + "ms")
 xlabel('Signal Length (S)')
@@ -147,7 +148,7 @@ ax3 = nexttile;
 errorbar(signalLens, baseline_dev, std_baseline_dev, 'LineWidth', 2)
 hold on
 yline(mean(baseline_dev),'r--', 'LineWidth',2)
-yline((desired_peak_loc_1 - desired_peak_loc_2), 'g--', 'LineWidth',2)
+yline(latencyDiff, 'g--', 'LineWidth',2)
 title('Baseline deviation latency')
 subtitle("Average latency = " + mean(baseline_dev) + "ms")
 xlabel('Signal Length (S)')
