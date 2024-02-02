@@ -45,6 +45,9 @@ for i = 1:length(ix)
     % avgZscore = rounded abs zscores for each point in original signal
     % from correlating warping path
     avgZscore = round(mean(abs(query(ix(i))) + abs(reference(iy(i)))));
+    if avgZscore <= 0 
+        avgZscore = 1;
+    end
     % add that latency into the distrubution avgZscore times
     for j = 1:avgZscore
         weightedLats = [weightedLats;lat(i)];
