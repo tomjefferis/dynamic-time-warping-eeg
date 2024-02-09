@@ -60,8 +60,6 @@ function erp_signal = genericERP(sample_rate, signal_duration, baseline_duration
         
 end
 
-
-
 function [valid,params] =  checkParams(~, signal_duration, ~, ~, ~, params)
     valid = false;
     if isstruct(params) == 0
@@ -138,6 +136,5 @@ function [valid,params] =  checkParams(~, signal_duration, ~, ~, ~, params)
 
     valid = true;
     return;
-
 
 end
