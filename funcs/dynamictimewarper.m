@@ -13,10 +13,10 @@ end
 
 for i = 1:size(data1,2)
 
-    [query] = zscore(ft_preproc_bandpassfilter(data1{i}.erp',fs,[1 30]));
-    [reference] = zscore(ft_preproc_bandpassfilter(data2{i}.erp',fs,[1 30]));
+    [query] = zscore(data1.erp);
+    [reference] = zscore(data2.erp);
 
-    [~,ix,iy] = dtw(query',reference');
+    [~,ix,iy] = dtw(query,reference);
     latency = ix - iy; % doing x - y since if the horizontal distance was 0 that would mean x=y 
     meanAbsLatency{i} = latency;
 end
@@ -33,8 +33,6 @@ pathlength = length(ix)*fs;
 
 % find iqr of absolute latency
 maxlatmedian = median(lat);
-[~, maxlatmedian] = min(abs(abs(lat) - maxlatmedian));
-maxlatmedian = lat(maxlatmedian);
 maxlatmedian = maxlatmedian*fs;
 
 
@@ -53,13 +51,10 @@ for i = 1:length(ix)
         weightedLats = [weightedLats;lat(i)];
     end
 end
-    % get the median from this array
-    medianWeightedLat= median(weightedLats);
-    % find the closest actual latency in the warping path
-    [~, maxWeightedlatmedian] = min(abs(abs(lat) - medianWeightedLat));
-    maxWeightedlatmedian = lat(maxWeightedlatmedian);
-    % turn into seconds
-    maxlat = maxWeightedlatmedian*fs;
+% get the median from this array
+maxWeightedlatmedian= median(weightedLats);
+% turn into seconds
+maxlat = maxWeightedlatmedian*fs;
 
 
 % 95th percentile of absolute latency

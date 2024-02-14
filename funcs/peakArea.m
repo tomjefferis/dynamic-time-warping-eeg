@@ -8,8 +8,8 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
 
 
     for i = 1:size(data1,1)
-        dat1 = data1{i}.erp;
-        dat2 = data2{i}.erp;
+        dat1 = data1.erp;
+        dat2 = data2.erp;
 
 
         dat1_base = dat1(1:round(baseline));
