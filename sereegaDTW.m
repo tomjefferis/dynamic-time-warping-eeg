@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_permutations = 10;
+n_permutations = 1000;
 % Source parameters
 N_locations = 10; % number of potential source generators
 location_distance = 50; % minimum disrtance between generators mm
