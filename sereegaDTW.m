@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_permutations = 1000;
+n_permutations = 10;
 % Source parameters
 N_locations = 10; % number of potential source generators
 location_distance = 50; % minimum disrtance between generators mm
@@ -15,10 +15,10 @@ n_components = 1:10;
 component_widths = 25:200;
 min_amplitude = -10;
 max_amplitude = 10; 
-SNR = 0.1; % Signal to noise ratio
+SNR = 0.3; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
 sig_length = 0.3:0.2:3; % time in S
-amplitude_variability = 0.1; % variability of amplitude
+amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
 % loading pre generated leadfield
@@ -33,8 +33,17 @@ peak_lat_mse = zeros(length(n_components), length(sig_length), length(latency_di
 peak_area_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
 
 
-for u = 1:length(n_components)
+parfor u = 1:length(n_components)
     n_component = n_components(u);
+    
+    temp_dtw_mse_median = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_dtw_mse_weighted_median = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_dtw_mse_95 = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_baseline_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_frac_peak_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_peak_lat_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_peak_area_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
+
     for i = 1:length(sig_length)
         sig_len = sig_length(i);
         for j = 1:length(latency_difference)
@@ -75,13 +84,13 @@ for u = 1:length(n_components)
                     c.signal = {erp,noise};       % ERP class, defined above
 
                     c = utl_check_component(c, lf);
-                    scalpdata = generate_scalpdata(c, lf, epochs);
+                    scpalpdata = generate_scalpdata(c, lf, epochs, 'useParallelPool', 0, 'showProgress', 0);
 
                     c = struct();
                     c.source = sourcelocs;      % obtained from the lead field, as above
                     c.signal = {erp2,noise};       % ERP class, defined above
                     c = utl_check_component(c, lf);
-                    scalpdata2 = generate_scalpdata(c, lf, epochs);
+                    scalpdata2 = generate_scalpdata(c, lf, epochs, 'useParallelPool', 0, 'showProgress', 0);
 
                     EEG1 = utl_create_eeglabdataset(scalpdata, epochs, lf);
                     data1 = eeglab2fieldtrip(EEG1, 'timelock', 'none');
@@ -107,18 +116,27 @@ for u = 1:length(n_components)
                     baselineLat = baselineDeviation(data2,data,fs, baselines,2);
 
                     % get mse for each metric
-                    dtw_mse_median(u,i,j,k) = mean((dtw_median - latency_diff).^2);
-                    dtw_mse_weighted_median(u,i,j,k) = mean((dtw_weighted_median - latency_diff).^2);
-                    dtw_mse_95(u,i,j,k) = mean((dtw_95 - latency_diff).^2);
-                    baseline_mse(u,i,j,k) = mean((baselineLat - latency_diff).^2);
-                    frac_peak_mse(u,i,j,k) = mean((fracPeakLat - latency_diff).^2);
-                    peak_lat_mse(u,i,j,k) = mean((peakLat - latency_diff).^2);
-                    peak_area_mse(u,i,j,k) = mean((areaLat - latency_diff).^2);
+                    temp_dtw_mse_median(u,i,j,k) = mean((dtw_median - latency_diff).^2);
+                    temp_dtw_mse_weighted_median(u,i,j,k) = mean((dtw_weighted_median - latency_diff).^2);
+                    temp_dtw_mse_95(u,i,j,k) = mean((dtw_95 - latency_diff).^2);
+                    temp_baseline_mse(u,i,j,k) = mean((baselineLat - latency_diff).^2);
+                    temp_frac_peak_mse(u,i,j,k) = mean((fracPeakLat - latency_diff).^2);
+                    temp_peak_lat_mse(u,i,j,k) = mean((peakLat - latency_diff).^2);
+                    temp_peak_area_mse(u,i,j,k) = mean((areaLat - latency_diff).^2);
                                        
                     
             end
         end
     end
+
+    dtw_mse_median(u,:,:,:) = temp_dtw_mse_median;
+    dtw_mse_weighted_median(u,:,:,:) = temp_dtw_mse_weighted_median;
+    dtw_mse_95(u,:,:,:) = temp_dtw_mse_95;
+    baseline_mse(u,:,:,:) = temp_baseline_mse;
+    frac_peak_mse(u,:,:,:) = temp_frac_peak_mse;
+    peak_lat_mse(u,:,:,:) = temp_peak_lat_mse;
+    peak_area_mse(u,:,:,:) = temp_peak_area_mse;
+    
 end
 
 
