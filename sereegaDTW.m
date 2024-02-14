@@ -33,7 +33,7 @@ peak_lat_mse = zeros(length(n_components), length(sig_length), length(latency_di
 peak_area_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
 
 
-parfor u = 1:length(n_components)
+for u = 1:length(n_components)
     n_component = n_components(u);
     
     temp_dtw_mse_median = zeros(length(sig_length), length(latency_difference), n_permutations);
@@ -84,13 +84,13 @@ parfor u = 1:length(n_components)
                     c.signal = {erp,noise};       % ERP class, defined above
 
                     c = utl_check_component(c, lf);
-                    scpalpdata = generate_scalpdata(c, lf, epochs, 'useParallelPool', 0, 'showProgress', 0);
+                    scalpdata = generate_scalpdata(c, lf, epochs);
 
                     c = struct();
                     c.source = sourcelocs;      % obtained from the lead field, as above
                     c.signal = {erp2,noise};       % ERP class, defined above
                     c = utl_check_component(c, lf);
-                    scalpdata2 = generate_scalpdata(c, lf, epochs, 'useParallelPool', 0, 'showProgress', 0);
+                    scalpdata2 = generate_scalpdata(c, lf, epochs);
 
                     EEG1 = utl_create_eeglabdataset(scalpdata, epochs, lf);
                     data1 = eeglab2fieldtrip(EEG1, 'timelock', 'none');
@@ -98,7 +98,14 @@ parfor u = 1:length(n_components)
                     EEG2 = utl_create_eeglabdataset(scalpdata2, epochs, lf);
                     data2_t = eeglab2fieldtrip(EEG2, 'timelock', 'none');
 
-                    % get random electrode 
+                    % check both signals are the same length... shouldnt
+                    % ever throw this in prod builds
+                    if size(data1.avg,2) ~= size(data2_t.avg,2)
+                        % throw error and stop
+                        error('Data is not the same length, check code.')
+                    end
+
+                    % get random electrode  
                     electrode = randi([1,size(data1.avg,1)],1,1);
 
                     
