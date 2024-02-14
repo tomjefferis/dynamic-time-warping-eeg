@@ -17,7 +17,7 @@ min_amplitude = -10;
 max_amplitude = 10; 
 SNR = 0.1; % Signal to noise ratio
 fs = 1000; % sample rate
-sig_length = 1:0.2:3; % time in S
+sig_length = 0.3:0.2:3; % time in S
 amplitude_variability = 0.1; % variability of amplitude
 
 
@@ -44,7 +44,11 @@ for u = 1:length(n_components)
                     
                     component_range = round(sig_len*fs*0.3) : round(sig_len*fs*0.8);
                     
-                    baselines = round(sig_len*fs*0.1);
+                    if sig_len*fs < 500
+                        baselines = 10;
+                    else
+                        baselines = round(sig_len*fs*0.1);
+                    end
                     
                     sourcelocs  = lf_get_source_spaced(lf, N_locations, location_distance);
                     amps = [min_amplitude:.1:min_amplitude/2, max_amplitude/2:.1:max_amplitude];
@@ -102,7 +106,15 @@ for u = 1:length(n_components)
                     areaLat = peakArea(data2,data,fs, 0.5, baselines);
                     baselineLat = baselineDeviation(data2,data,fs, baselines,2);
 
-                    
+                    % get mse for each metric
+                    dtw_mse_median(u,i,j,k) = mean((dtw_median - latency_diff).^2);
+                    dtw_mse_weighted_median(u,i,j,k) = mean((dtw_weighted_median - latency_diff).^2);
+                    dtw_mse_95(u,i,j,k) = mean((dtw_95 - latency_diff).^2);
+                    baseline_mse(u,i,j,k) = mean((baselineLat - latency_diff).^2);
+                    frac_peak_mse(u,i,j,k) = mean((fracPeakLat - latency_diff).^2);
+                    peak_lat_mse(u,i,j,k) = mean((peakLat - latency_diff).^2);
+                    peak_area_mse(u,i,j,k) = mean((areaLat - latency_diff).^2);
+                                       
                     
             end
         end
@@ -111,5 +123,11 @@ end
 
 
 
-
+save('Results\data\dtw_mse_median.mat', 'dtw_mse_median')
+save('Results\data\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median')
+save('Results\data\dtw_mse_95.mat', 'dtw_mse_95')
+save('Results\data\baseline_mse.mat', 'baseline_mse')
+save('Results\data\frac_peak_mse.mat', 'frac_peak_mse')
+save('Results\data\peak_lat_mse.mat', 'peak_lat_mse')
+save('Results\data\peak_area_mse.mat', 'peak_area_mse')
 
