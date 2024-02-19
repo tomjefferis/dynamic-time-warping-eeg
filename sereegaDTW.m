@@ -5,46 +5,43 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_permutations = 100;
-% Source parameters
-location_distance = 5; % minimum disrtance between generators mm
+n_signals_generate = 5000; %not permutations maybe experiment setup 
 % Component parameters
-latency_difference = -0.05:0.01:0.05;
-n_components = 1:10; 
+latency_difference = -0.1:0.01:0.1;
+n_components = 2:8; 
 component_widths = 25:200;
 min_amplitude = -10;
 max_amplitude = 10; 
 SNR = 0.3; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
-sig_length = 0.3:0.2:3; % time in S
+sig_length = 0.3:0.1:3; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
-% loading pre generated leadfield
-lf = lf_generate_fromnyhead('montage', 'S64');
 % result arrays
-dtw_mse_median = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-dtw_mse_weighted_median= zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-dtw_mse_95 = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-baseline_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-frac_peak_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-peak_lat_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
-peak_area_mse = zeros(length(n_components), length(sig_length), length(latency_difference), n_permutations);
+dtw_mse_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+dtw_mse_weighted_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+dtw_mse_95 = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+baseline_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+frac_peak_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+peak_lat_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
+peak_area_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
+% relatively detailed methods 
 
-parfor u = 1:length(n_components)
-    n_component = n_components(u);
+parfor u = 1:length(sig_length)
+    sig_len = sig_length(u);
     
-    temp_dtw_mse_median = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_dtw_mse_weighted_median = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_dtw_mse_95 = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_baseline_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_frac_peak_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_peak_lat_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
-    temp_peak_area_mse = zeros(length(sig_length), length(latency_difference), n_permutations);
+    temp_dtw_mse_median = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_dtw_mse_weighted_median = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_dtw_mse_95 = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_baseline_mse = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_frac_peak_mse = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_peak_lat_mse = ones(length(n_components), length(latency_difference), n_signals_generate);
+    temp_peak_area_mse = ones(length(n_components), length(latency_difference), n_signals_generate);
 
-    for i = 1:length(sig_length)
-        sig_len = sig_length(i);
+    for i = 1:length(n_components)
+        n_component = n_components(i);
         for j = 1:length(latency_difference)
             latency_diff = latency_difference(j);
 
@@ -57,14 +54,13 @@ parfor u = 1:length(n_components)
                 baselines = round(sig_len*fs*0.1);
             end
 
-            sourcelocs  = lf_get_source_spaced(lf, n_permutations, location_distance);
             amps = [min_amplitude:.1:min_amplitude/2, max_amplitude/2:.1:max_amplitude];
             %erp = erp_get_class_random(n_component, component_range, component_widths, amps);
-            erp = erp_get_class_random(n_component, component_range, component_widths, amps,'numClasses', n_permutations);
+            erp = erp_get_class_random(n_component, component_range, component_widths, amps,'numClasses', n_signals_generate);
 
             % erp2 with added latency difference
             erp2 = erp;
-            for k = 1:n_permutations
+            for k = 1:n_signals_generate
                 erp2(k).peakLatency = erp2(k).peakLatency + latency_diff*fs;
             end
 
@@ -79,7 +75,7 @@ parfor u = 1:length(n_components)
             epochs.srate = fs;        % their sampling rate in Hz
             epochs.length = sig_len*fs;       % their length in ms
 
-            for k = 1:n_permutations
+            for k = 1:n_signals_generate
 
 
                     dat1 = generate_signal_fromclass(erp(k), epochs);
