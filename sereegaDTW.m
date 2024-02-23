@@ -5,16 +5,16 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 5000; %not permutations maybe experiment setup 
+n_signals_generate = 2500; 
 % Component parameters
-latency_difference = -0.1:0.01:0.1;
-n_components = 2:8; 
-component_widths = 25:200;
+latency_difference = -0.1:0.02:0.1;
+n_components = 1:8; 
+component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10; 
 SNR = 0.3; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
-sig_length = 0.3:0.1:3; % time in S
+sig_length = [0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.25 1.5 1.75 2 2.5 3]; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
@@ -27,7 +27,7 @@ frac_peak_mse = ones(length(sig_length), length(n_components), length(latency_di
 peak_lat_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 peak_area_mse = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
-% relatively detailed methods 
+
 
 parfor u = 1:length(sig_length)
     sig_len = sig_length(u);

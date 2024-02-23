@@ -6,10 +6,36 @@ load('Results\data\baseline_mse.mat')
 load('Results\data\frac_peak_mse.mat')
 load('Results\data\peak_lat_mse.mat')
 load('Results\data\peak_area_mse.mat')
+% change name of data to _1
+dtw_mse_median_1 = dtw_mse_median;
+dtw_mse_weighted_median_1 = dtw_mse_weighted_median;
+dtw_mse_95_1 = dtw_mse_95;
+baseline_mse_1 = baseline_mse;
+frac_peak_mse_1 = frac_peak_mse;
+peak_lat_mse_1 = peak_lat_mse;
+peak_area_mse_1 = peak_area_mse;
 
-latency_difference = -0.05:0.01:0.05;
-n_components = 1:8;
-sig_length = 0.3:0.2:3; % time in S
+% load data with _1 at the end
+load('Results\data\dtw_mse_median_1.mat')
+load('Results\data\dtw_mse_weighted_median_1.mat')
+load('Results\data\dtw_mse_95_1.mat')
+load('Results\data\baseline_mse_1.mat')
+load('Results\data\frac_peak_mse_1.mat')
+load('Results\data\peak_lat_mse_1.mat')
+load('Results\data\peak_area_mse_1.mat')
+
+% combine data from both sets joining on the last dimension of the 4d array
+dtw_mse_median = cat(4,dtw_mse_median,dtw_mse_median_1);
+dtw_mse_weighted_median = cat(4,dtw_mse_weighted_median,dtw_mse_weighted_median_1);
+dtw_mse_95 = cat(4,dtw_mse_95,dtw_mse_95_1);
+baseline_mse = cat(4,baseline_mse,baseline_mse_1);
+frac_peak_mse = cat(4,frac_peak_mse,frac_peak_mse_1);
+peak_lat_mse = cat(4,peak_lat_mse,peak_lat_mse_1);
+peak_area_mse = cat(4,peak_area_mse,peak_area_mse_1);
+
+latency_difference = -0.1:0.02:0.1;
+n_components = 1:8; 
+sig_length = [0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.25 1.5 1.75 2 2.5 3]; % time in S
 % first dim is N-comonents
 % second dim is length of signal
 % third dim is latency difference
