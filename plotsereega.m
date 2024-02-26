@@ -144,11 +144,11 @@ colorbar;
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
 
 % make plot larger
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(n_components) max(n_components)]);
 
-sgtitle('MSE for Different Metrics and Latency Differences and Number of Components');
+sgtitle('MSE for Different Methods, Latency Differences and Number of Components');
 
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp.png');
@@ -249,11 +249,11 @@ colorbar;
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
 
 % make plot larger
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
 
-sgtitle('MSE for Different Metrics and Latency Differences and Length of Signal');
+sgtitle('MSE for Different Methods, Latency Differences and Length of Signal');
 
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen.png');
@@ -353,11 +353,11 @@ colorbar;
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
 
 % make plot larger
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 ylim([min(sig_length) max(sig_length)]);
 xlim([min(n_components) max(n_components)]);
 
-sgtitle('MSE for Different Metrics and Latency Differences and Length of Signal');
+sgtitle('MSE for Different Methods, Number of Components and Length of Signal');
 
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen.png');
@@ -425,7 +425,7 @@ colorbar;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(n_components) max(n_components)]);
 sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
@@ -476,7 +476,7 @@ colorbar;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
 sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
@@ -526,7 +526,7 @@ colorbar;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
 sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
@@ -534,3 +534,155 @@ sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Si
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_dtw.png');
 
+
+dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,1),4));
+dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,1),4));
+dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,1),4));
+
+maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
+
+figure();
+ax1 = subplot(1,3,1);
+surf(latency_difference,n_components,dtw_mse_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Number of Components');
+title('DTW Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+
+ax2 = subplot(1,3,2);
+surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Number of Components');
+title('DTW Weighted Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+
+ax3 = subplot(1,3,3);
+surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Number of Components');
+title('Peak Area');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+colorbar;
+
+% join axes and set x and y lims to be the same
+linkaxes([ax1,ax2,ax3],'xy');
+set(gcf, 'Position', [0, 0, 1280, 720]);
+xlim([min(latency_difference) max(latency_difference)]);
+ylim([min(n_components) max(n_components)]);
+sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
+
+% save plot
+saveas(gcf,'Results\mse_3d_slices_lat_comp_pa.png');
+
+dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,2),4));
+dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,2),4));
+dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,2),4));
+
+maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
+
+figure();
+ax1 = subplot(1,3,1);
+surf(latency_difference,sig_length,dtw_mse_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Length of Signal');
+title('DTW Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+
+ax2 = subplot(1,3,2);
+surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Length of Signal');
+title('DTW Weighted Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+
+ax3 = subplot(1,3,3);
+surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Latency Difference');
+ylabel('Length of Signal');
+title('Peak Area');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+colorbar;
+
+% join axes and set x and y lims to be the same
+linkaxes([ax1,ax2,ax3],'xy');
+set(gcf, 'Position', [0, 0, 1280, 720]);
+xlim([min(latency_difference) max(latency_difference)]);
+ylim([min(sig_length) max(sig_length)]);
+sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
+
+% save plot
+saveas(gcf,'Results\mse_3d_slices_lat_siglen_pa.png');
+
+dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,3),4));
+dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,3),4));
+dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,3),4));
+
+maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
+figure();
+ax1 = subplot(1,3,1);
+surf(n_components,sig_length,dtw_mse_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Number of Components');
+ylabel('Length of Signal');
+title('DTW Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+
+ax2 = subplot(1,3,2);
+surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Number of Components');
+ylabel('Length of Signal');
+title('DTW Weighted Median');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+
+ax3 = subplot(1,3,3);
+surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
+view(2);
+shading interp;
+xlabel('Number of Components');
+ylabel('Length of Signal');
+title('Peak Area');
+zlabel('MSE');
+clim([0 maxColor]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+colorbar;
+
+% join axes and set x and y lims to be the same
+linkaxes([ax1,ax2,ax3],'xy');
+set(gcf, 'Position', [0, 0, 1280, 720]);
+xlim([min(n_components) max(n_components)]);
+ylim([min(sig_length) max(sig_length)]);
+sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
+
+% save plot
+saveas(gcf,'Results\mse_3d_slices_comp_siglen_pa.png');

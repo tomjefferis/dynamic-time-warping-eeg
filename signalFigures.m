@@ -11,6 +11,7 @@ component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10; 
 SNR = 0.3;
+latency_diff = 0.05; 
 
 % subplot 8x1 
 figure();
@@ -28,6 +29,14 @@ for i = n_components
     epochs.srate = fs;        
     epochs.length = sig_length*fs; 
     dat1 = generate_signal_fromclass(erp, epochs);
+
+
+    if i == 6
+        dat6 = dat1;
+        erp2 = erp;
+        erp2.peakLatency = erp2.peakLatency + latency_diff*fs;  
+        dat2 = generate_signal_fromclass(erp2, epochs);
+    end
 
     ax1 = subplot(8,1,i);
     plot(dat1, "LineWidth", 1.5)
@@ -94,9 +103,26 @@ figure();
 plot(data, "LineWidth", 1.5)
 xlabel('Time (ms)')
 ylabel('Amplitude (uV)')
-title('8 component signal with pink noise after bandpass filtered')
+title('8 component signal with pink noise after bandpass filter')
 ylim([-20 20])
 
 set(gcf, 'Position', [0, 0, 720, 480]);
 
 saveas(gcf, 'Results\signal_with_pink_noise_filtered.png')
+
+
+
+figure();
+
+plot(dat6, "LineWidth", 1.5)
+hold on
+plot(dat2, "LineWidth", 1.5)
+legend('Signal 1', 'Signal 2')
+xlabel('Time (ms)')
+ylabel('Amplitude (uV)')
+title('Latency difference signal 1 and 2, no noise')
+
+
+set(gcf, 'Position', [0, 0, 720, 480]);
+
+saveas(gcf, 'Results\signal_with_latency_diff.png')
