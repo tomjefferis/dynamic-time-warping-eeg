@@ -360,7 +360,7 @@ xlim([min(n_components) max(n_components)]);
 sgtitle('MSE for Different Methods, Number of Components and Length of Signal');
 
 % save plot
-saveas(gcf,'Results\mse_3d_slices_lat_siglen.png');
+saveas(gcf,'Results\mse_3d_slices_lat_siglen_comp.png');
 
 
 % table describing the average MSE for each metric along with standard deviation and range and median
