@@ -1,7 +1,7 @@
 %% file is for generateing animation for the simulation data
 clear all;
 restoredefaultpath;
-addpath funcs/;
+addpath funcs\;
 addpath generate_signals/;
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 if ~contains(path,'W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
@@ -51,7 +51,10 @@ for i = 1:length(signalLens)
     sigtime = sigtime(1:end-1);
     
     %% plot frame for animation
-    figure('Position', [0, 0, 1900, 1200]);
+    figure('Position', [0, 0, 1000, 500]);
+    
+    % Subplot grid of 2x3
+    subplot(2, 3, [1, 2, 4, 5]);
     hold on;
     for m = 1:length(ix)
         plot([ix(m), iy(m)], [sig1{1}.erp(ix(m)), sig2{1}.erp(iy(m))], 'k--', 'LineWidth', 0.5, 'Color', [0.8,0.8,0.8]);
@@ -60,13 +63,6 @@ for i = 1:length(signalLens)
     plot(sig1{1}.erp, "LineWidth", 2, "Color", 'r');
     plot(sig2{1}.erp, "LineWidth", 2, "Color", 'b');
     xline(baselineFun, "LineWidth", 1, "Color", 'r', "LineStyle", "--", "Alpha", 0.5);
-    % plot dtw
-    
-    % Create inset figure for histogram
-    
-    
-    
-    
     
     tit = strcat("ERP Signals with ",string(latencydiff),"s latency difference");
     title(tit);
@@ -74,12 +70,12 @@ for i = 1:length(signalLens)
     ylabel("Amplitude");
     set(gca, "FontSize", 14);
     set(gcf, "Color", "w");
-    %xlim([0, signalLens(end)]);
     ylim([-5, 5]);
     grid on;
     hold off;
-    insetPos = [0.7, 0.2, 0.2, 0.2]; % Position of the inset figure [left, bottom, width, height]
-    insetAx = axes('Position', insetPos);
+    set(gca, 'FontSize', 16);
+    % First inset figure for histogram
+    subplot(2, 3, 3);
     histogram(ix - iy);
     title('Distribution of Distances');
     xlabel('Timepoints Latency');
@@ -87,8 +83,25 @@ for i = 1:length(signalLens)
     hold on;
     xline(latencydiff*fs, "Color", 'r', 'LineWidth',1.5)
     xline(median(ix-iy),"Color", 'g', 'LineWidth',1.5)
+    % 95th precentile
+    xline(prctile(ix-iy,95),"Color", 'm', 'LineWidth',1.5)
+    legend("Distribution","Actual Latency", "Median Distribution","95th Percentile","Location","northeast")
+    set(gca, 'FontSize', 16);
     
+    % Second inset figure for warping path
+    subplot(2, 3, 6);
+    plot(ix, iy, 'k-', 'LineWidth', 1.5);
+    hold on;
+    plot([0, max(ix)], [0, max(iy)], 'r--', 'LineWidth', 1);
+    title('Warping Path');
+    xlabel('Timepoints Signal 1');
+    ylabel('Timepoints Signal 2');
+    set(gca, 'FontSize', 12);
+    grid on;
+    legend("Warping path", "Location","southeast")
     
+    % set font size to 16
+    set(gca, 'FontSize', 16);
     
     %% save frame
     frames{end+1} = frame2im(getframe(gcf));

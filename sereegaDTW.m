@@ -29,7 +29,7 @@ peak_area_mse = ones(length(sig_length), length(n_components), length(latency_di
 
 
 
-parfor u = 1:length(sig_length)
+for u = 1:length(sig_length)
     sig_len = sig_length(u);
     
     temp_dtw_mse_median = ones(length(n_components), length(latency_difference), n_signals_generate);

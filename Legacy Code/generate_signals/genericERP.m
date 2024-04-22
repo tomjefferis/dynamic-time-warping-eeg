@@ -6,10 +6,10 @@ function erp_signal = genericERP(sample_rate, signal_duration, baseline_duration
         time = 0:1/sample_rate:signal_duration-1/sample_rate;
         
         % Generate clean ERP signal with adjusted components
-        p1_amplitude = 1 + variance * abs(randn()); % Adjusted P1 amplitude with randomness
-        p2_amplitude = 0.75 + variance * abs(randn());
-        n1_amplitude = -1.25 + variance * abs(randn()); % Adjusted N1 amplitude with randomness
-        p3_amplitude = 1.25 + variance * abs(randn()); % Adjusted P3 amplitude with randomness
+        p1_amplitude = 0.5 + variance * abs(randn()); % Adjusted P1 amplitude with randomness
+        p2_amplitude = 0.35 + variance * abs(randn());
+        n1_amplitude = -0.25 + variance * abs(randn()); % Adjusted N1 amplitude with randomness
+        p3_amplitude = 0.25 + variance * abs(randn()); % Adjusted P3 amplitude with randomness
         
         baseline = zeros(1, round(baseline_duration * sample_rate)); % Baseline period
         
