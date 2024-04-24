@@ -96,7 +96,8 @@ for i = 1:length(SNRs)
                     sig1_window.erp = data.erp(window_start:window_end);
                     sig2_window.erp = data2.erp(window_start:window_end);
 
-
+                    % needa  way to add baseline in, maybe just append to
+                    % front for these methods?
                     [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(sig2_window, sig1_window, fs);
                     peakLat = peaklatency(sig2_window,sig1_window,fs);
                     fracPeakLat = fracpeaklatency(sig2_window,sig1_window,fs);
