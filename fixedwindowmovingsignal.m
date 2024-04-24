@@ -23,7 +23,7 @@ window_widths = sig_length/10:sig_length/10:sig_length;
 
 allwinLocs = [];
 for i = 1
-    allwinLocs = [allwinLocs, 0:window_widths(i)/2:sig_length-window_widths(i)];
+    allwinLocs = [allwinLocs, 1:window_widths(i)/2:sig_length*fs-window_widths(i)];
 end
 
 
@@ -36,7 +36,7 @@ frac_peak_mse = NaN(length(SNRs), length(latency_difference), length(window_widt
 peak_lat_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
 peak_area_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
 
-parfor i = 1:length(SNRs)
+for i = 1:length(SNRs)
     SNR = SNRs(i);
     
     % temp arrays
@@ -52,7 +52,7 @@ parfor i = 1:length(SNRs)
         latency_diff = latency_difference(j);
         for k = 1:length(window_widths)
             
-            window_width = window_widths(k);
+            window_width = window_widths(k)*fs;
             
             
             for n = 1:length(n_signals_generate)
@@ -76,7 +76,7 @@ parfor i = 1:length(SNRs)
                 
                 sig1 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
-                erp.peakLatency = erp.peakLatency + latency_difference*fs;
+                erp.peakLatency = erp.peakLatency + latency_diff*fs;
                 
                 sig2 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
@@ -86,10 +86,10 @@ parfor i = 1:length(SNRs)
                 data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30])';
                 
                 
-                window_location = 0:window_width/2:sig_length-window_width;
+                window_location = 1:window_width/2:sig_length*fs-window_width;
                 for l = 1:length(window_location)
-                    window_start = window_location(l)*fs;
-                    window_end = window_start + window_width*fs;
+                    window_start = window_location(l);
+                    window_end = window_start + window_width;
                     
                     sig1_window = struct();
                     sig2_window = struct();
