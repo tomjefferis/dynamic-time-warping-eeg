@@ -10,9 +10,9 @@ component_amplitude = [-3,3]; % amplitude of the components, one value per compo
 trials_per_ERP = 200; % how many trials to generate per ERP
 jitter_amount = 0.05; % how much jitter to add to the components in seconds
 n_signals_generate = 5000; % how many ERP signals to generate
-sig_len = 0.4; % signal length in seconds
+sig_len = 0.5; % signal length in seconds
 fs = 1000; % sample rate
-snr = 0.7; % signal to noise ratio
+snr = 5; % signal to noise ratio
 
 
 % using matlab batch for the loop
@@ -27,3 +27,14 @@ for i = 1:size(trials, 1)
     plot(trials(i, :),'LineWidth',1.5);
 end
 hold off;
+
+
+filteredGA = ft_preproc_bandpassfilter(grandAvg,fs,[1 30])';
+
+
+figure;
+plot(baseSignal,'LineWidth',1.5)
+hold on
+plot(grandAvg,'LineWidth',1.5)
+plot(filteredGA,'LineWidth',1.5)
+legend("Base Signal","Grand Avg","Filtered GA")

@@ -10,7 +10,7 @@ fs = 1000;
 component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10; 
-SNR = 0.3;
+SNR = 0.5;
 latency_diff = 0.05; 
 
 % subplot 8x1 
@@ -18,7 +18,7 @@ figure();
 axs = [];
 for i = n_components
 
-    component_range = round(sig_length*fs*0.3) : round(sig_length*fs*0.8);
+    component_range = round(sig_length*fs*0.2) : round(sig_length*fs*0.8);
 
     amps = [min_amplitude:.1:min_amplitude/2, max_amplitude/2:.1:max_amplitude];
 

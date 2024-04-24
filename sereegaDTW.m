@@ -5,14 +5,14 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 5000;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 n_components = 1:8;
 component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10;
-SNRs = 0.1:0.05:1; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
+SNRs = 0.0:0.1:3; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
 sig_length = 0.2:0.05:1; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
@@ -132,6 +132,7 @@ expParams = struct();
 expParams.components = n_components;
 expParams.latency_difference = latency_difference;
 expParams.sig_length = sig_length;
+expParams.SNRs = SNRs;
 
 save('Results\data\expParams.mat', 'expParams')
 save('Results\data\dtw_mse_median.mat', 'dtw_mse_median')
