@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 100;
+n_signals_generate = 10;
 % Component parameters
 latency_difference = -0.1:0.05:0.1;
 n_components = 1:8;
@@ -119,7 +119,7 @@ for t = 1:length(SNRs)
             end
         end
     end
-    disp('Completed SNR: ' + string(SNR) + ' of ' + string(SNRs(end)) + '...')
+    disp('Completed SNR: ' + string(t))
     dtw_mse_median(t,:,:,:,:) = temp_dtw_mse_median;
     dtw_mse_weighted_median(t,:,:,:,:) = temp_dtw_mse_weighted_median;
     dtw_mse_95(t,:,:,:,:) = temp_dtw_mse_95;
