@@ -48,6 +48,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(baseline_mse(:));
+subtitle(['Baseline Deviation MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -59,6 +61,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(dtw_mse_95(:));
+subtitle(['DTW 95th percentile MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -70,6 +74,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(dtw_mse_median(:));
+subtitle(['DTW Median MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -81,6 +87,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(dtw_mse_weighted_median(:));
+subtitle(['DTW Weighted Median MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -92,6 +100,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(frac_peak_mse(:));
+subtitle(['Fractional Peak Latency MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -103,6 +113,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(peak_area_mse(:));
+subtitle(['Fractional Area Latency MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -114,6 +126,8 @@ shading interp
 view(2)
 ylabel('Latency difference')
 xlabel('Window width')
+MSE = nanmean(peak_lat_mse(:));
+subtitle(['Peak Latency MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
