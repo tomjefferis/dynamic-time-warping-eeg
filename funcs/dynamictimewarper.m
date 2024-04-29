@@ -6,9 +6,9 @@ function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
 % Input: data = array of erp data for a single electrode samples x trials
 
 % check if W:\PhD\MatlabPlugins\fieldtrip-20210906 is in the path
-if ~contains(path,'W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
-    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
-end
+%if ~contains(path,'W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
+%    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
+%end
 
 
 for i = 1:size(data1,2)

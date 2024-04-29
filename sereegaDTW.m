@@ -5,16 +5,16 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 1000;
+n_signals_generate = 100;
 % Component parameters
-latency_difference = -0.1:0.01:0.1;
+latency_difference = -0.1:0.05:0.1;
 n_components = 1:8;
 component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10;
-SNRs = 0.0:0.1:3; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
+SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
-sig_length = 0.2:0.05:1; % time in S
+sig_length = [0.2,0.3,0.4,0.5,0.6,0.7,0.8,1,1.25,1.5,1.75,2,2.5,3]; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
@@ -28,7 +28,7 @@ peak_lat_mse = ones(length(SNRs),length(sig_length), length(n_components), lengt
 peak_area_mse = ones(length(SNRs),length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
 
-parfor t = 1:length(SNRs)
+for t = 1:length(SNRs)
     SNR = SNRs(t);
 
     
@@ -119,6 +119,7 @@ parfor t = 1:length(SNRs)
             end
         end
     end
+    disp('Completed SNR: ' + string(SNR) + ' of ' + string(SNRs(end)) + '...')
     dtw_mse_median(t,:,:,:,:) = temp_dtw_mse_median;
     dtw_mse_weighted_median(t,:,:,:,:) = temp_dtw_mse_weighted_median;
     dtw_mse_95(t,:,:,:,:) = temp_dtw_mse_95;
@@ -134,12 +135,12 @@ expParams.latency_difference = latency_difference;
 expParams.sig_length = sig_length;
 expParams.SNRs = SNRs;
 
-save('Results\data\expParams.mat', 'expParams')
-save('Results\data\dtw_mse_median.mat', 'dtw_mse_median')
-save('Results\data\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median')
-save('Results\data\dtw_mse_95.mat', 'dtw_mse_95')
-save('Results\data\baseline_mse.mat', 'baseline_mse')
-save('Results\data\frac_peak_mse.mat', 'frac_peak_mse')
-save('Results\data\peak_lat_mse.mat', 'peak_lat_mse')
-save('Results\data\peak_area_mse.mat', 'peak_area_mse')
+save('Results\data\expParams.mat', 'expParams', '-v7.3')
+save('Results\data\dtw_mse_median.mat', 'dtw_mse_median', '-v7.3')
+save('Results\data\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median', '-v7.3')
+save('Results\data\dtw_mse_95.mat', 'dtw_mse_95', '-v7.3')
+save('Results\data\baseline_mse.mat', 'baseline_mse', '-v7.3')
+save('Results\data\frac_peak_mse.mat', 'frac_peak_mse', '-v7.3')
+save('Results\data\peak_lat_mse.mat', 'peak_lat_mse', '-v7.3')
+save('Results\data\peak_area_mse.mat', 'peak_area_mse', '-v7.3')
 
