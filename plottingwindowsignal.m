@@ -23,7 +23,7 @@ load('Results\ChangingWindow\peak_area_mse.mat')
 load('Results\ChangingWindow\peak_lat_mse.mat')
 load('Results\ChangingWindow\params.mat')
 
-% nanmean last 2 dimensions
+% nanmean since some of the arrays have NaNs since not all window locations could be used with long windows
 baseline_mse = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(baseline_mse, 5)), 4)),1));
 dtw_mse_95 = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(dtw_mse_95, 5)), 4)),1));
 dtw_mse_median = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(dtw_mse_median, 5)), 4)),1));
