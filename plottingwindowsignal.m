@@ -43,7 +43,7 @@ clims = [min([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighte
 figure
 subplot(2,4,1)
 surf(params.window_widths,params.latency_difference,baseline_mse)
-title('baseline_mse')
+title('Baseline Deviation')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -54,7 +54,7 @@ clim(clims)
 
 subplot(2,4,2)
 surf(params.window_widths,params.latency_difference,dtw_mse_95)
-title('dtw_mse_95')
+title('DTW 95th percentile')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -65,7 +65,7 @@ clim(clims)
 
 subplot(2,4,3)
 surf(params.window_widths,params.latency_difference,dtw_mse_median)
-title('dtw_mse_median')
+title('DTW Median')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -76,7 +76,7 @@ clim(clims)
 
 subplot(2,4,4)
 surf(params.window_widths,params.latency_difference,dtw_mse_weighted_median)
-title('dtw_mse_weighted_median')
+title('DTW Weighted Median')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -87,7 +87,7 @@ clim(clims)
 
 subplot(2,4,5)
 surf(params.window_widths,params.latency_difference,frac_peak_mse)
-title('frac_peak_mse')
+title('Fractional Peak Latency')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -98,7 +98,7 @@ clim(clims)
 
 subplot(2,4,6)
 surf(params.window_widths,params.latency_difference,peak_area_mse)
-title('peak_area_mse')
+title('Fractional Area Latency')
 shading interp
 view(2)
 ylabel('Latency difference')
@@ -109,7 +109,7 @@ clim(clims)
 
 subplot(2,4,7)
 surf(params.window_widths,params.latency_difference,peak_lat_mse)
-title('peak_lat_mse')
+title('Peak Latency')
 shading interp
 view(2)
 ylabel('Latency difference')
