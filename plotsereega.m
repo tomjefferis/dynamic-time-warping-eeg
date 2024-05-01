@@ -112,7 +112,7 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
-colorbar;
+snr
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
@@ -217,7 +217,7 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
-colorbar;
+snr
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
@@ -321,7 +321,11 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
+
+ax8 = subplot(2,4,8);
 colorbar;
+axis off;
+
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
@@ -363,7 +367,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,2),5)),1));
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(latency_difference,n_components,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -374,7 +378,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -385,7 +389,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -394,8 +398,10 @@ ylabel('Number of Components');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -414,7 +420,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,3),5)),1));
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(latency_difference,sig_length,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -425,7 +431,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -436,7 +442,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -446,7 +452,10 @@ title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -464,7 +473,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,5),4)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(n_components,sig_length,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -475,7 +484,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -486,7 +495,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -496,7 +505,10 @@ title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -516,7 +528,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,2),5)),1));
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(latency_difference,n_components,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -527,7 +539,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -538,7 +550,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -548,7 +560,10 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -567,7 +582,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,3),5)),1));
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(latency_difference,sig_length,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -578,7 +593,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -589,7 +604,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -599,7 +614,10 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -617,7 +635,7 @@ dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,5),4)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 figure();
-ax1 = subplot(1,3,1);
+ax1 = subplot(1,4,1);
 surf(n_components,sig_length,dtw_mse_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -628,7 +646,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
 
-ax2 = subplot(1,3,2);
+ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -639,7 +657,7 @@ zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
 
-ax3 = subplot(1,3,3);
+ax3 = subplot(1,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
@@ -649,7 +667,13 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+
+
+ax4 = subplot(1,4,4);
 colorbar;
+axis off;
+
+
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
@@ -686,3 +710,5 @@ xlabel('SNR');
 ylabel('MSE');
 title('MSE for Different Methods and SNR');
 legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
+
+saveas(gcf,'Results\mse_snr.png');

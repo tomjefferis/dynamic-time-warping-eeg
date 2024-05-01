@@ -137,7 +137,11 @@ clim(clims)
 subplot(2,4,8)
 colorbar
 axis off
-axis image
+
+% save figure
+saveas(gcf, 'Results\ChangingWindow\plottingwindowsignal.png')
+
+
 
 
 
