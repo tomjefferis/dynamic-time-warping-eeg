@@ -23,13 +23,13 @@ sig_length = expParams.sig_length; % time in S
 % create surf plots with interp shading, first set should contain 
 % x should be latency difference, y should be number of components, z should be MSE (averaged)
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,1),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,1),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,1),4));
-baseline_mse_p1 = squeeze(mean(mean(baseline_mse,1),4));
-frac_peak_mse_p1 = squeeze(mean(mean(frac_peak_mse,1),4));
-peak_lat_mse_p1 = squeeze(mean(mean(peak_lat_mse,1),4));
-peak_area_mse_p1 = squeeze(mean(mean(peak_area_mse,1),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,2),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,2),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,2),5)),1));
+baseline_mse_p1 = squeeze(mean(squeeze(mean(mean(baseline_mse,2),5)),1));
+frac_peak_mse_p1 = squeeze(mean(squeeze(mean(mean(frac_peak_mse,2),5)),1));
+peak_lat_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_lat_mse,2),5)),1));
+peak_area_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,2),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:); baseline_mse_p1(:); frac_peak_mse_p1(:); peak_lat_mse_p1(:); peak_area_mse_p1(:)]);
 
@@ -128,13 +128,13 @@ sgtitle('MSE for Different Methods, Latency Differences and Number of Components
 saveas(gcf,'Results\mse_3d_slices_lat_comp.png');
 
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,2),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,2),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,2),4));
-baseline_mse_p1 = squeeze(mean(mean(baseline_mse,2),4));
-frac_peak_mse_p1 = squeeze(mean(mean(frac_peak_mse,2),4));
-peak_lat_mse_p1 = squeeze(mean(mean(peak_lat_mse,2),4));
-peak_area_mse_p1 = squeeze(mean(mean(peak_area_mse,2),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,3),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,3),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,3),5)),1));
+baseline_mse_p1 = squeeze(mean(squeeze(mean(mean(baseline_mse,3),5)),1));
+frac_peak_mse_p1 = squeeze(mean(squeeze(mean(mean(frac_peak_mse,3),5)),1));
+peak_lat_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_lat_mse,3),5)),1));
+peak_area_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,3),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:); baseline_mse_p1(:); frac_peak_mse_p1(:); peak_lat_mse_p1(:); peak_area_mse_p1(:)]);
 
@@ -232,13 +232,13 @@ sgtitle('MSE for Different Methods, Latency Differences and Length of Signal');
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen.png');
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,3),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,3),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,3),4));
-baseline_mse_p1 = squeeze(mean(mean(baseline_mse,3),4));
-frac_peak_mse_p1 = squeeze(mean(mean(frac_peak_mse,3),4));
-peak_lat_mse_p1 = squeeze(mean(mean(peak_lat_mse,3),4));
-peak_area_mse_p1 = squeeze(mean(mean(peak_area_mse,3),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,5),4)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,5),4)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,5),4)),1));
+baseline_mse_p1 = squeeze(mean(squeeze(mean(mean(baseline_mse,5),4)),1));
+frac_peak_mse_p1 = squeeze(mean(squeeze(mean(mean(frac_peak_mse,5),4)),1));
+peak_lat_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_lat_mse,5),4)),1));
+peak_area_mse_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,5),4)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:); baseline_mse_p1(:); frac_peak_mse_p1(:); peak_lat_mse_p1(:); peak_area_mse_p1(:)]);
 
@@ -356,9 +356,9 @@ writetable(T,'Results\mse_table.csv','WriteRowNames',true);
 
 % repeat all graphs but only for DTW methods on 1x3 subplot
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,1),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,1),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,1),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,2),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,2),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,2),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
@@ -407,9 +407,9 @@ sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Com
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp_dtw.png');
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,2),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,2),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,2),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,3),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,3),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,3),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
@@ -458,9 +458,9 @@ sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Sig
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen_dtw.png');
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,3),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,3),4));
-dtw_mse_95_p1 = squeeze(mean(mean(dtw_mse_95,3),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,5),4)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,5),4)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_95,5),4)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 figure();
@@ -509,9 +509,9 @@ sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Si
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_dtw.png');
 
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,1),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,1),4));
-dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,1),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,2),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,2),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,2),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
@@ -560,9 +560,9 @@ sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Com
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp_pa.png');
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,2),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,2),4));
-dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,2),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,3),5)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,3),5)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,3),5)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 
@@ -611,9 +611,9 @@ sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Sig
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen_pa.png');
 
-dtw_mse_median_p1 = squeeze(mean(mean(dtw_mse_median,3),4));
-dtw_mse_weighted_median_p1 = squeeze(mean(mean(dtw_mse_weighted_median,3),4));
-dtw_mse_95_p1 = squeeze(mean(mean(peak_area_mse,3),4));
+dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,5),4)),1));
+dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,5),4)),1));
+dtw_mse_95_p1 = squeeze(mean(squeeze(mean(mean(peak_area_mse,5),4)),1));
 
 maxColor = max([dtw_mse_median_p1(:); dtw_mse_weighted_median_p1(:); dtw_mse_95_p1(:)]);
 figure();
@@ -660,3 +660,29 @@ sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Si
 
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_pa.png');
+
+%% now plotting curves for increasing SNR, snr is x axis and mse is y axis, average all other dimensions, mean dimensions 5,4,3,2 and squeeze
+dtw_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_median,5)),4)),3)),2)))');
+dtw_weighted_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_weighted_median,5)),4)),3)),2)))');
+dtw_95_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_95,5)),4)),3)),2)))');
+baseline_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(baseline_mse,5)),4)),3)),2)))');
+frac_peak_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(frac_peak_mse,5)),4)),3)),2)))');
+peak_lat_snr =  fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(peak_lat_mse,5)),4)),3)),2)))');
+peak_area_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(peak_area_mse,5)),4)),3)),2)))');
+
+snr = fliplr(expParams.SNRs);
+snr = 1./snr;
+
+figure;
+plot(snr,dtw_median_snr,"LineWidth",2);
+hold on;
+plot(snr,dtw_weighted_median_snr,"LineWidth",2);
+plot(snr,dtw_95_snr,"LineWidth",2);
+plot(snr,baseline_snr,"LineWidth",2);
+plot(snr,frac_peak_snr,"LineWidth",2);
+plot(snr,peak_lat_snr,"LineWidth",2);
+plot(snr,peak_area_snr,"LineWidth",2);
+xlabel('SNR');
+ylabel('MSE');
+title('MSE for Different Methods and SNR');
+legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');

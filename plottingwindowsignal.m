@@ -42,32 +42,6 @@ clims = [min([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighte
 % 2d plot roc style curve for increasing snr
 figure
 subplot(2,4,1)
-surf(params.window_widths,params.latency_difference,baseline_mse)
-title('Baseline Deviation')
-shading interp
-view(2)
-ylabel('Latency difference')
-xlabel('Window width')
-MSE = nanmean(baseline_mse(:));
-subtitle(['Baseline Deviation MSE: ', num2str(MSE)])
-xlim(params.window_widths([1,end-1]))
-ylim(params.latency_difference([1,end]))
-clim(clims)
-
-subplot(2,4,2)
-surf(params.window_widths,params.latency_difference,dtw_mse_95)
-title('DTW 95th percentile')
-shading interp
-view(2)
-ylabel('Latency difference')
-xlabel('Window width')
-MSE = nanmean(dtw_mse_95(:));
-subtitle(['DTW 95th percentile MSE: ', num2str(MSE)])
-xlim(params.window_widths([1,end-1]))
-ylim(params.latency_difference([1,end]))
-clim(clims)
-
-subplot(2,4,3)
 surf(params.window_widths,params.latency_difference,dtw_mse_median)
 title('DTW Median')
 shading interp
@@ -75,12 +49,13 @@ view(2)
 ylabel('Latency difference')
 xlabel('Window width')
 MSE = nanmean(dtw_mse_median(:));
-subtitle(['DTW Median MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
 
-subplot(2,4,4)
+
+subplot(2,4,2)
 surf(params.window_widths,params.latency_difference,dtw_mse_weighted_median)
 title('DTW Weighted Median')
 shading interp
@@ -88,7 +63,33 @@ view(2)
 ylabel('Latency difference')
 xlabel('Window width')
 MSE = nanmean(dtw_mse_weighted_median(:));
-subtitle(['DTW Weighted Median MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE)])
+xlim(params.window_widths([1,end-1]))
+ylim(params.latency_difference([1,end]))
+clim(clims)
+
+subplot(2,4,3)
+surf(params.window_widths,params.latency_difference,dtw_mse_95)
+title('DTW 95th percentile')
+shading interp
+view(2)
+ylabel('Latency difference')
+xlabel('Window width')
+MSE = nanmean(dtw_mse_95(:));
+subtitle(['Average MSE: ', num2str(MSE)])
+xlim(params.window_widths([1,end-1]))
+ylim(params.latency_difference([1,end]))
+clim(clims)
+
+subplot(2,4,4)
+surf(params.window_widths,params.latency_difference,baseline_mse)
+title('Baseline Deviation')
+shading interp
+view(2)
+ylabel('Latency difference')
+xlabel('Window width')
+MSE = nanmean(baseline_mse(:));
+subtitle(['Average MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -101,25 +102,12 @@ view(2)
 ylabel('Latency difference')
 xlabel('Window width')
 MSE = nanmean(frac_peak_mse(:));
-subtitle(['Fractional Peak Latency MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
 
 subplot(2,4,6)
-surf(params.window_widths,params.latency_difference,peak_area_mse)
-title('Fractional Area Latency')
-shading interp
-view(2)
-ylabel('Latency difference')
-xlabel('Window width')
-MSE = nanmean(peak_area_mse(:));
-subtitle(['Fractional Area Latency MSE: ', num2str(MSE)])
-xlim(params.window_widths([1,end-1]))
-ylim(params.latency_difference([1,end]))
-clim(clims)
-
-subplot(2,4,7)
 surf(params.window_widths,params.latency_difference,peak_lat_mse)
 title('Peak Latency')
 shading interp
@@ -127,10 +115,29 @@ view(2)
 ylabel('Latency difference')
 xlabel('Window width')
 MSE = nanmean(peak_lat_mse(:));
-subtitle(['Peak Latency MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
+
+subplot(2,4,7)
+surf(params.window_widths,params.latency_difference,peak_area_mse)
+title('Fractional Area Latency')
+shading interp
+view(2)
+ylabel('Latency difference')
+xlabel('Window width')
+MSE = nanmean(peak_area_mse(:));
+subtitle(['Average MSE: ', num2str(MSE)])
+xlim(params.window_widths([1,end-1]))
+ylim(params.latency_difference([1,end]))
+clim(clims)
+
+% plot 8 just colorbar
+subplot(2,4,8)
+colorbar
+axis off
+axis image
 
 
 
