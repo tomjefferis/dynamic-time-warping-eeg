@@ -5,48 +5,38 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 500;
+n_signals_generate = 5000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 SNRs = 0.0:0.1:5; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 
 % params not to change unless different signal wanted
-n_components = 5;
-component_widths = 25:250;
-component_amplitude = [-5:5];
 fs = 1000; % sample rate
 sig_length = 1; % time in S
-intercomponent_jitter = 0.07; % jitter between components in S
-intercomponent_amp = 0.1; % amplitude difference between components
-amplitude_variability = 0.1; % variability of amplitude, not implemented yet
-window_widths = sig_length/10:sig_length/10:sig_length;
+window_widths = sig_length/15:sig_length/15:sig_length;
 
-allwinLocs = [];
-for i = 1
-    allwinLocs = [allwinLocs, 1:window_widths(i)/2:sig_length*fs-window_widths(i)];
-end
 
 
 % result arrays
-dtw_mse_median = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-dtw_mse_weighted_median = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-dtw_mse_95 = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-baseline_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-frac_peak_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-peak_lat_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-peak_area_mse = NaN(length(SNRs), length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
+dtw_mse_median = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+dtw_mse_weighted_median = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+dtw_mse_95 = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+baseline_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+frac_peak_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+peak_lat_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+peak_area_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
 
 for i = 1:length(SNRs)
     SNR = SNRs(i);
     
     % temp arrays
-    temp_dtw_mse_median = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_dtw_mse_weighted_median = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_dtw_mse_95 = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_baseline_mse = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_frac_peak_mse = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_peak_lat_mse = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
-    temp_peak_area_mse = NaN( length(latency_difference), length(window_widths),length(allwinLocs), n_signals_generate);
+    temp_dtw_mse_median = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_dtw_mse_weighted_median = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_dtw_mse_95 = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_baseline_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_frac_peak_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_peak_lat_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_peak_area_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
     
     for j = 1:length(latency_difference)
         latency_diff = latency_difference(j);
@@ -56,12 +46,15 @@ for i = 1:length(SNRs)
             
             
             for n = 1:length(n_signals_generate)
-                erp = [];
-                erp = erp_get_class_random(n_components, round(sig_length*fs*0.15) : round(sig_length*fs*0.75), component_widths, component_amplitude,'numClasses', 1);
-                
-                % have random deviations selecter from 0 to intercomponent_jitter needing n_components random values
-                erp.peakLatencyDv  = randi([0, intercomponent_jitter*fs], 1, n_components);
-                erp.peakAmplitudeDv = randi([0, 100], 1, n_components)/200;
+
+                erp = struct();
+                erp.peakAmplitude = [3,-6,3,-2,7];
+                erp.peakLatency = [200,270,320,360,650];
+                erp.peakWidth = [65,70,56,55,600];
+                erp.probability = 1;
+                erp.type = 'erp';
+                erp.probabilitySlope = 0;
+                erp = utl_check_class(erp);
                 
                 epochs = struct();
                 epochs.n = 1;             % the number of epochs to simulate
@@ -71,12 +64,12 @@ for i = 1:length(SNRs)
                 noise = struct( ...
                     'type', 'noise', ...
                     'color', 'pink', ...
-                    'amplitude', max(component_amplitude)*SNR);
+                    'amplitude', max(5)*SNR);
                 noise = utl_check_class(noise);
                 
                 sig1 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
-                erp.peakLatency = erp.peakLatency + latency_diff*fs;
+                erp.peakLatency = erp.peakLatency(5) + latency_diff*fs;
                 
                 sig2 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
@@ -85,7 +78,7 @@ for i = 1:length(SNRs)
                 data2 = struct();
                 data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30])';
                 
-                
+                %% Implemented P1N1P3 ERP shape and move the P3 component, start window at 400ms 
                 window_location = 1:window_width/2:sig_length*fs-window_width;
                 for l = 1:length(window_location)
                     window_start = window_location(l);

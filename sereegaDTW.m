@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 10;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.05:0.1;
 n_components = 1:8;
@@ -14,7 +14,7 @@ min_amplitude = -10;
 max_amplitude = 10;
 SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
-sig_length = [0.2,0.3,0.4,0.5,0.6,0.7,0.8,1,1.25,1.5,1.75,2,2.5,3]; % time in S
+sig_length = [0.2,0.4,0.5,0.6,0.7,0.8,1,1.25,1.5,1.75,2,2.5,3]; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
@@ -28,10 +28,8 @@ peak_lat_mse = ones(length(SNRs),length(sig_length), length(n_components), lengt
 peak_area_mse = ones(length(SNRs),length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
 
-for t = 1:length(SNRs)
+parfor t = 1:length(SNRs)
     SNR = SNRs(t);
-
-    
 
     temp_dtw_mse_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
     temp_dtw_mse_weighted_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
@@ -135,7 +133,7 @@ expParams.latency_difference = latency_difference;
 expParams.sig_length = sig_length;
 expParams.SNRs = SNRs;
 
-save('Results\data\expParams.mat', 'expParams', '-v7.3')
+save('Results\data\expParams', 'expParams', '-v7.3')
 save('Results\data\dtw_mse_median.mat', 'dtw_mse_median', '-v7.3')
 save('Results\data\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median', '-v7.3')
 save('Results\data\dtw_mse_95.mat', 'dtw_mse_95', '-v7.3')
