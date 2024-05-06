@@ -64,12 +64,12 @@ for i = 1:length(SNRs)
                 noise = struct( ...
                     'type', 'noise', ...
                     'color', 'pink', ...
-                    'amplitude', max(5)*SNR);
+                    'amplitude', max(abs(erp.peakAmplitude))*SNR);
                 noise = utl_check_class(noise);
                 
                 sig1 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
-                erp.peakLatency = erp.peakLatency(5) + latency_diff*fs;
+                erp.peakLatency(5) = erp.peakLatency(5) + latency_diff*fs;
                 
                 sig2 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
@@ -78,8 +78,8 @@ for i = 1:length(SNRs)
                 data2 = struct();
                 data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30])';
                 
-                %% Implemented P1N1P3 ERP shape and move the P3 component, start window at 400ms 
-                window_location = 1:window_width/2:sig_length*fs-window_width;
+                %% Implemented P1N1P3 ERP shape and move the P3 component, start window at 350ms 
+                window_location = 350;
                 for l = 1:length(window_location)
                     window_start = window_location(l);
                     window_end = window_start + window_width;
