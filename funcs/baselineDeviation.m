@@ -7,8 +7,13 @@ function latency = baselineDeviation(data1,data2,fs,baseline, deviation)
         dat1 = data1.erp;
         dat2 = data2.erp;
 
-        dat1_base = dat1(1:round(baseline));
-        dat2_base = dat2(1:round(baseline));
+        if ~isstruct(baseline)
+            dat1_base = dat1(1:round(baseline));
+            dat2_base = dat2(1:round(baseline));
+        else
+            dat1_base = baseline.one;
+            dat2_base = baseline.two;
+        end
 
         dat1_dev = std(dat1_base);
         dat2_dev = std(dat2_base);

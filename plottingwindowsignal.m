@@ -24,13 +24,13 @@ load('Results\ChangingWindow\peak_lat_mse.mat')
 load('Results\ChangingWindow\params.mat')
 
 % nanmean since some of the arrays have NaNs since not all window locations could be used with long windows
-baseline_mse = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(baseline_mse, 5)), 4)),1));
-dtw_mse_95 = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(dtw_mse_95, 5)), 4)),1));
-dtw_mse_median = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(dtw_mse_median, 5)), 4)),1));
-dtw_mse_weighted_median = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(dtw_mse_weighted_median, 5)), 4)),1));
-frac_peak_mse = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(frac_peak_mse, 5)), 4)),1));
-peak_area_mse = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(peak_area_mse, 5)), 4)),1));
-peak_lat_mse = squeeze(nanmean(squeeze(nanmean(squeeze(nanmean(peak_lat_mse, 5)), 4)),1));
+baseline_mse = squeeze(nanmean(squeeze(nanmean(baseline_mse, 4)),1));
+dtw_mse_95 = squeeze(nanmean(squeeze(nanmean(dtw_mse_95,  4)),1));
+dtw_mse_median = squeeze(nanmean(squeeze(nanmean(dtw_mse_median,  4)),1));
+dtw_mse_weighted_median = squeeze(nanmean(squeeze(nanmean(dtw_mse_weighted_median,  4)),1));
+frac_peak_mse = squeeze(nanmean(squeeze(nanmean(frac_peak_mse,  4)),1));
+peak_area_mse = squeeze(nanmean(squeeze(nanmean(peak_area_mse,  4)),1));
+peak_lat_mse = squeeze(nanmean(squeeze(nanmean(peak_lat_mse,  4)),1));
 
 clims = [min([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighted_median(:); frac_peak_mse(:); peak_area_mse(:); peak_lat_mse(:)]), max([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighted_median(:); frac_peak_mse(:); peak_area_mse(:); peak_lat_mse(:)])];
 
@@ -138,8 +138,20 @@ subplot(2,4,8)
 colorbar
 axis off
 
+% figure size 1920x1080
+set(gcf, 'Position', [0, 0, 1920, 1080])
+
 % save figure
 saveas(gcf, 'Results\ChangingWindow\plottingwindowsignal.png')
+
+load('Results\ChangingWindow\baseline_mse.mat')
+load('Results\ChangingWindow\dtw_mse_95.mat')
+load('Results\ChangingWindow\dtw_mse_median.mat')
+load('Results\ChangingWindow\dtw_mse_weighted_median.mat')
+load('Results\ChangingWindow\frac_peak_mse.mat')
+load('Results\ChangingWindow\peak_area_mse.mat')
+load('Results\ChangingWindow\peak_lat_mse.mat')
+load('Results\ChangingWindow\params.mat')
 
 
 

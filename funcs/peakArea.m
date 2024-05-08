@@ -11,9 +11,13 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
         dat1 = abs(data1.erp);
         dat2 = abs(data2.erp);
 
-
-        dat1_base = dat1(1:round(baseline));
-        dat2_base = dat2(1:round(baseline));
+        if ~isstruct(baseline)
+            dat1_base = dat1(1:round(baseline));
+            dat2_base = dat2(1:round(baseline));
+        else
+            dat1_base = baseline.one;
+            dat2_base = baseline.two;
+        end
 
         dat1_base_std = std(dat1_base);
         dat2_base_std = std(dat2_base);
@@ -27,7 +31,7 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
             component_end_1 = find(dat1 >= dat1(component_start_1), 1, 'last');
         catch 
             try
-                component_start_1 = baseline;
+                component_start_1 = 1;
                 component_end_1 = find(dat1 >= dat1(component_start_1), 1, 'last');
              catch 
                 component_start_1 = baseline;
@@ -40,7 +44,7 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
             component_end_2 = find(dat2 >= dat2(component_start_2), 1, 'last');
         catch 
             try
-            component_start_2 = baseline;
+            component_start_2 = 1;
             component_end_2 = find(dat2 >= dat2(component_start_2), 1, 'last');
             catch 
                 component_start_2 = baseline;
@@ -51,6 +55,10 @@ function latency = peakArea(data1, data2, fs, areaThreshold, baseline)
 
 
         %calculate the area under the curve from the threshold to the max point
+
+        if isstruct(component_start_1) || isstruct(component_start_2) || isstruct(component_end_2) || isstruct(component_end_1)
+            disp("SHITTT")
+        end
 
         maxArea1 = trapz(dat1(component_start_1:component_end_1));
         maxArea2 = trapz(dat2(component_start_2:component_end_2));

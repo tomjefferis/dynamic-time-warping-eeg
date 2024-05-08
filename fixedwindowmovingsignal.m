@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 5000;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 SNRs = 0.0:0.1:5; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
@@ -13,30 +13,30 @@ SNRs = 0.0:0.1:5; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERP
 % params not to change unless different signal wanted
 fs = 1000; % sample rate
 sig_length = 1; % time in S
-window_widths = sig_length/15:sig_length/15:sig_length;
+window_widths = sig_length/25:sig_length/25:sig_length-350/fs;
 
 
 
 % result arrays
-dtw_mse_median = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-dtw_mse_weighted_median = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-dtw_mse_95 = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-baseline_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-frac_peak_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-peak_lat_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
-peak_area_mse = NaN(length(SNRs), length(window_widths), length(latency_difference), n_signals_generate);
+dtw_mse_median = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+dtw_mse_weighted_median = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+dtw_mse_95 = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+baseline_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+frac_peak_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+peak_lat_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+peak_area_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 
 for i = 1:length(SNRs)
     SNR = SNRs(i);
     
     % temp arrays
-    temp_dtw_mse_median = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_dtw_mse_weighted_median = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_dtw_mse_95 = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_baseline_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_frac_peak_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_peak_lat_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
-    temp_peak_area_mse = NaN( length(window_widths), length(latency_difference), n_signals_generate);
+    temp_dtw_mse_median = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_dtw_mse_weighted_median = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_dtw_mse_95 = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_baseline_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_frac_peak_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_peak_lat_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    temp_peak_area_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
     
     for j = 1:length(latency_difference)
         latency_diff = latency_difference(j);
@@ -74,20 +74,44 @@ for i = 1:length(SNRs)
                 sig2 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
                 data = struct();
-                data.erp = ft_preproc_bandpassfilter(sig1,fs,[1 30])';
+                data.erp = ft_preproc_bandpassfilter(sig1,fs,[1 30]);
                 data2 = struct();
-                data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30])';
+                data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30]);
+
+                % get baselines
+                baselinePeriod = [-0.1,0];
+                time = -0.1:1/fs:sig_length-0.1;
+                time = time(1:end-1);
+                cfg = [];
+                cfg.baseline = baselinePeriod;
+                cfg.parameter = 'erp';
+                data.time = time;
+                data2.time = time;
+                data.dimord = 'chan_time';
+                data2.dimord = 'chan_time';
+                data.label = {'A23'};
+                data2.label = {'A23'};
+
+                data = ft_timelockbaseline(cfg, data);
+                data2 = ft_timelockbaseline(cfg, data2);
                 
+                data.erp = data.erp';
+                data2.erp = data2.erp';
+
                 %% Implemented P1N1P3 ERP shape and move the P3 component, start window at 350ms 
                 window_location = 350;
                 for l = 1:length(window_location)
                     window_start = window_location(l);
-                    window_end = window_start + window_width;
+                    window_end = window_start + round(window_width);
                     
                     sig1_window = struct();
                     sig2_window = struct();
                     sig1_window.erp = data.erp(window_start:window_end);
                     sig2_window.erp = data2.erp(window_start:window_end);
+                    
+                    baselines = struct();
+                    baselines.one = data.erp(1:100);
+                    baselines.two = data2.erp(1:100);
 
                     % needa  way to add baseline in, maybe just append to
                     % front for these methods?
@@ -110,13 +134,13 @@ for i = 1:length(SNRs)
             end
         end
     end
-    dtw_mse_median(i,:,:,:,:) = temp_dtw_mse_median;
-    dtw_mse_weighted_median(i,:,:,:,:) = temp_dtw_mse_weighted_median;
-    dtw_mse_95(i,:,:,:,:) = temp_dtw_mse_95;
-    baseline_mse(i,:,:,:,:) = temp_baseline_mse;
-    frac_peak_mse(i,:,:,:,:) = temp_frac_peak_mse;
-    peak_lat_mse(i,:,:,:,:) = temp_peak_lat_mse;
-    peak_area_mse(i,:,:,:,:) = temp_peak_area_mse;
+    dtw_mse_median(i,:,:,:) = temp_dtw_mse_median;
+    dtw_mse_weighted_median(i,:,:,:) = temp_dtw_mse_weighted_median;
+    dtw_mse_95(i,:,:,:) = temp_dtw_mse_95;
+    baseline_mse(i,:,:,:) = temp_baseline_mse;
+    frac_peak_mse(i,:,:,:) = temp_frac_peak_mse;
+    peak_lat_mse(i,:,:,:) = temp_peak_lat_mse;
+    peak_area_mse(i,:,:,:) = temp_peak_area_mse;
 end
 
 % save results
@@ -132,16 +156,9 @@ params = struct();
 params.n_signals_generate = n_signals_generate;
 params.latency_difference = latency_difference;
 params.SNRs = SNRs;
-params.n_components = n_components;
-params.component_widths = component_widths;
-params.component_amplitude = component_amplitude;
 params.fs = fs;
 params.sig_length = sig_length;
-params.intercomponent_jitter = intercomponent_jitter;
-params.intercomponent_amp = intercomponent_amp;
-params.amplitude_variability = amplitude_variability;
 params.window_widths = window_widths;
-params.allwinLocs = allwinLocs;
 
 save('Results\ChangingWindow\params.mat', 'params')
 

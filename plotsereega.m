@@ -112,7 +112,7 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
-snr
+
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
@@ -217,7 +217,7 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
-snr
+
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
@@ -656,6 +656,8 @@ title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+xlim([min(n_components) max(n_components)]);
+ylim([min(sig_length) max(sig_length)]);
 
 ax3 = subplot(1,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
@@ -667,7 +669,8 @@ title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
-
+xlim([min(n_components) max(n_components)]);
+ylim([min(sig_length) max(sig_length)]);
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -677,9 +680,10 @@ axis off;
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
+
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
+set(gcf, 'Position', [0, 0, 1280, 720]);
 sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
 
 % save plot
@@ -710,5 +714,5 @@ xlabel('SNR');
 ylabel('MSE');
 title('MSE for Different Methods and SNR');
 legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
-
+set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\mse_snr.png');
