@@ -12,7 +12,7 @@ n_components = 1:8;
 component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10;
-SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
+SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
 fs = 1000; % sample rate
 sig_length = [0.2,0.4,0.5,0.6,0.7,0.8,1,1.25,1.5,1.75,2,2.5,3]; % time in S
 amplitude_variability = 0.1; % variability of amplitude, not implemented yet
@@ -28,7 +28,7 @@ peak_lat_mse = ones(length(SNRs),length(sig_length), length(n_components), lengt
 peak_area_mse = ones(length(SNRs),length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
 
-parfor t = 1:length(SNRs)
+for t = 1:length(SNRs)
     SNR = SNRs(t);
 
     temp_dtw_mse_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
