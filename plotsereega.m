@@ -702,14 +702,17 @@ snr = fliplr(expParams.SNRs);
 snr = 1./snr;
 
 figure;
-plot(snr,dtw_median_snr,"LineWidth",2);
+semilogx(snr,dtw_median_snr,"LineWidth",2);
 hold on;
-plot(snr,dtw_weighted_median_snr,"LineWidth",2);
-plot(snr,dtw_95_snr,"LineWidth",2);
-plot(snr,baseline_snr,"LineWidth",2);
-plot(snr,frac_peak_snr,"LineWidth",2);
-plot(snr,peak_lat_snr,"LineWidth",2);
-plot(snr,peak_area_snr,"LineWidth",2);
+semilogx(snr,dtw_weighted_median_snr,"LineWidth",2);
+semilogx(snr,dtw_95_snr,"LineWidth",2);
+semilogx(snr,baseline_snr,"LineWidth",2);
+semilogx(snr,frac_peak_snr,"LineWidth",2);
+semilogx(snr,peak_lat_snr,"LineWidth",2);
+semilogx(snr,peak_area_snr,"LineWidth",2);
+xlim([snrs(1), snrs(end)])
+% add at least 5 xticks
+xticks([0.2,0.3,0.4, 0.5,0.6,0.7,0.8,0.9,1,1.5,2,3,5,6,7,8,9,10])
 xlabel('SNR');
 ylabel('MSE');
 title('MSE for Different Methods and SNR');
