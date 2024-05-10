@@ -5,7 +5,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 1000;
+n_signals_generate = 2000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs

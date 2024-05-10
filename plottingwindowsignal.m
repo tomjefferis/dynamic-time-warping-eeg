@@ -33,6 +33,7 @@ peak_area_mse = squeeze(nanmean(squeeze(nanmean(peak_area_mse,  4)),1));
 peak_lat_mse = squeeze(nanmean(squeeze(nanmean(peak_lat_mse,  4)),1));
 
 clims = [min([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighted_median(:); frac_peak_mse(:); peak_area_mse(:); peak_lat_mse(:)]), max([baseline_mse(:); dtw_mse_95(:); dtw_mse_median(:); dtw_mse_weighted_median(:); frac_peak_mse(:); peak_area_mse(:); peak_lat_mse(:)])];
+formatSpec = '%.4f';
 
 % plot on surf, interpolate, no boundaries, view 2, X axis is latency from params.latency_difference, Y axis is window width from params.window_widths
 % order plots correctly 
@@ -49,7 +50,7 @@ view(2)
 ylabel('Latency difference')
 xlabel('Window width')
 MSE = nanmean(dtw_mse_median(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -60,10 +61,8 @@ surf(params.window_widths,params.latency_difference,dtw_mse_weighted_median)
 title('DTW Weighted Median')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(dtw_mse_weighted_median(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -73,10 +72,8 @@ surf(params.window_widths,params.latency_difference,dtw_mse_95)
 title('DTW 95th percentile')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(dtw_mse_95(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -86,10 +83,8 @@ surf(params.window_widths,params.latency_difference,baseline_mse)
 title('Baseline Deviation')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(baseline_mse(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -99,10 +94,8 @@ surf(params.window_widths,params.latency_difference,frac_peak_mse)
 title('Fractional Peak Latency')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(frac_peak_mse(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -112,10 +105,8 @@ surf(params.window_widths,params.latency_difference,peak_lat_mse)
 title('Peak Latency')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(peak_lat_mse(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
@@ -125,16 +116,15 @@ surf(params.window_widths,params.latency_difference,peak_area_mse)
 title('Fractional Area Latency')
 shading interp
 view(2)
-ylabel('Latency difference')
-xlabel('Window width')
 MSE = nanmean(peak_area_mse(:));
-subtitle(['Average MSE: ', num2str(MSE)])
+subtitle(['Average MSE: ', num2str(MSE,formatSpec)])
 xlim(params.window_widths([1,end-1]))
 ylim(params.latency_difference([1,end]))
 clim(clims)
 
 % plot 8 just colorbar
 subplot(2,4,8)
+clim(clims)
 colorbar
 axis off
 
@@ -169,22 +159,25 @@ peak_lat_mse = fliplr(squeeze(mean(peak_lat_mse,[4,3,2],'omitnan'))');
 snrs = 1./fliplr(params.SNRs);
 
 figure
-semilogx(snrs,baseline_mse, "LineWidth", 2)
-hold on
-semilogx(snrs,dtw_mse_95, "LineWidth", 2)
 semilogx(snrs,dtw_mse_median, "LineWidth", 2)
+hold on
 semilogx(snrs,dtw_mse_weighted_median, "LineWidth", 2)
+semilogx(snrs,dtw_mse_95, "LineWidth", 2)
+semilogx(snrs,baseline_mse, "LineWidth", 2)
 semilogx(snrs,frac_peak_mse, "LineWidth", 2)
-semilogx(snrs,peak_area_mse, "LineWidth", 2)
 semilogx(snrs,peak_lat_mse, "LineWidth", 2)
+semilogx(snrs,peak_area_mse, "LineWidth", 2)
+
 
 xlim([snrs(1), snrs(end)])
 % add at least 5 xticks
-xticks([0.2,0.3,0.4, 0.5,0.6,0.7,0.8,0.9,1,1.5,2,3,5,6,7,8,9,10])
+xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
+%fontsize 14
+set(gca, 'FontSize', 14)
 
 xlabel('SNR')
 ylabel('MSE')
-title('MSE vs SNR')
-legend('Baseline Deviation', 'DTW 95th percentile', 'DTW Median', 'DTW Weighted Median', 'Fractional Peak Latency', 'Fractional Area Latency', 'Peak Latency')
+title('MSE vs SNR for Different Methods');
+legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\ChangingWindow\mse_snr.png');

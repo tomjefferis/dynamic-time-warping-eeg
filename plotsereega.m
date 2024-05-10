@@ -19,6 +19,8 @@ sig_length = expParams.sig_length; % time in S
 % values are MSE for each permutation
 
 
+formatSpec = '%.4f';
+
 % plot grid of subplots for each possible 3d slice of the data
 % create surf plots with interp shading, first set should contain 
 % x should be latency difference, y should be number of components, z should be MSE (averaged)
@@ -44,89 +46,82 @@ ylabel('Number of Components');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(2,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(2,4,3);
 surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 
 
 ax4 = subplot(2,4,4);
 surf(latency_difference,n_components,baseline_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('Baseline Deviation');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)),formatSpec)]);
 
 ax5 = subplot(2,4,5);
 surf(latency_difference,n_components,frac_peak_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('Fractional Peak');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)),formatSpec)]);
 
 ax6 = subplot(2,4,6);
 surf(latency_difference,n_components,peak_lat_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('Peak Latency');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)),formatSpec)]);
 
 ax7 = subplot(2,4,7);
 surf(latency_difference,n_components,peak_area_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
-
+subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)),formatSpec)]);
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
 
-% make plot larger
-set(gcf, 'Position', [0, 0, 1280, 720]);
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(n_components) max(n_components)]);
+
+ax8 = subplot(2,4,8);
+colorbar;
+clim([0 maxColor]);
+axis off;
+
+% make plot larger
+set(gcf, 'Position', [0, 0, 1280, 720]);
+
 
 sgtitle('MSE for Different Methods, Latency Differences and Number of Components');
 
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp.png');
-
 
 dtw_mse_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_median,3),5)),1));
 dtw_mse_weighted_median_p1 = squeeze(mean(squeeze(mean(mean(dtw_mse_weighted_median,3),5)),1));
@@ -149,83 +144,77 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(2,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(2,4,3);
 surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 
 
 ax4 = subplot(2,4,4);
 surf(latency_difference,sig_length,baseline_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('Baseline Deviation');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)),formatSpec)]);
 
 ax5 = subplot(2,4,5);
 surf(latency_difference,sig_length,frac_peak_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('Fractional Peak');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)),formatSpec)]);
 
 ax6 = subplot(2,4,6);
 surf(latency_difference,sig_length,peak_lat_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('Peak Latency');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)),formatSpec)]);
 
 ax7 = subplot(2,4,7);
 surf(latency_difference,sig_length,peak_area_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)),formatSpec)]);
+
 
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3,ax4,ax5,ax6,ax7],'xy');
+xlim([min(latency_difference) max(latency_difference)]);
+ylim([min(sig_length) max(sig_length)]);
+
+ax8 = subplot(2,4,8);
+colorbar;
+clim([0 maxColor]);
+axis off;
 
 % make plot larger
 set(gcf, 'Position', [0, 0, 1280, 720]);
-xlim([min(latency_difference) max(latency_difference)]);
-ylim([min(sig_length) max(sig_length)]);
 
 sgtitle('MSE for Different Methods, Latency Differences and Length of Signal');
 
@@ -253,77 +242,80 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax2 = subplot(2,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax3 = subplot(2,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 
 ax4 = subplot(2,4,4);
 surf(n_components,sig_length,baseline_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('Baseline Deviation');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(baseline_mse_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax5 = subplot(2,4,5);
 surf(n_components,sig_length,frac_peak_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('Fractional Peak');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(frac_peak_mse_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax6 = subplot(2,4,6);
 surf(n_components,sig_length,peak_lat_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('Peak Latency');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_lat_mse_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax7 = subplot(2,4,7);
 surf(n_components,sig_length,peak_area_mse_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_area_mse_p1(:)),formatSpec)]);
+ylim([min(sig_length) max(sig_length)]);
+xlim([min(n_components) max(n_components)]);
 
 ax8 = subplot(2,4,8);
 colorbar;
+clim([0 maxColor]);
 axis off;
 
 
@@ -376,40 +368,38 @@ ylabel('Number of Components');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(1,4,3);
 surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
+linkaxes([ax1,ax2,ax3],'xy');
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
+xlim([min(latency_difference) max(latency_difference)]);
+ylim([min(n_components) max(n_components)]);
 
 ax4 = subplot(1,4,4);
 colorbar;
+clim([0 maxColor]);
 axis off;
 
 % join axes and set x and y lims to be the same
-linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
-xlim([min(latency_difference) max(latency_difference)]);
-ylim([min(n_components) max(n_components)]);
-sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
 
+sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
+set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp_dtw.png');
 
@@ -429,41 +419,38 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(1,4,3);
 surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 
-ax4 = subplot(1,4,4);
-colorbar;
-axis off;
-
-% join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
+
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
 sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
 
+ax4 = subplot(1,4,4);
+colorbar;
+clim([0 maxColor]);
+axis off;
+
+set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen_dtw.png');
 
@@ -482,41 +469,40 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(1,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('DTW 95th Percentile');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 
-ax4 = subplot(1,4,4);
-colorbar;
-axis off;
-
-% join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
+
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
 sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
 
+ax4 = subplot(1,4,4);
+colorbar;
+clim([0 maxColor]);
+axis off;
+
+% join axes and set x and y lims to be the same
+
+set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_dtw.png');
 
@@ -537,41 +523,40 @@ ylabel('Number of Components');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(1,4,3);
 surf(latency_difference,n_components,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Number of Components');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(peak_area_mse(:)),formatSpec)]);
 
-ax4 = subplot(1,4,4);
-colorbar;
-axis off;
+
 
 % join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
+
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(n_components) max(n_components)]);
 sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
 
+ax4 = subplot(1,4,4);
+colorbar;
+clim([0 maxColor]);
+axis off;
+set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp_pa.png');
 
@@ -591,41 +576,40 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 
 ax3 = subplot(1,4,3);
 surf(latency_difference,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Latency Difference');
-ylabel('Length of Signal');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 
-ax4 = subplot(1,4,4);
-colorbar;
-axis off;
-
-% join axes and set x and y lims to be the same
 linkaxes([ax1,ax2,ax3],'xy');
-set(gcf, 'Position', [0, 0, 1280, 720]);
+
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
 sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
 
+ax4 = subplot(1,4,4);
+colorbar;
+clim([0 maxColor]);
+axis off;
+
+% join axes and set x and y lims to be the same
+
+set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_siglen_pa.png');
 
@@ -644,18 +628,16 @@ ylabel('Length of Signal');
 title('DTW Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_median_p1(:)),formatSpec)]);
 
 ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('DTW Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
 
@@ -663,29 +645,30 @@ ax3 = subplot(1,4,3);
 surf(n_components,sig_length,dtw_mse_95_p1,'EdgeColor','none');
 view(2);
 shading interp;
-xlabel('Number of Components');
-ylabel('Length of Signal');
 title('Fractional Area');
 zlabel('MSE');
 clim([0 maxColor]);
-subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)))]);
+subtitle(['Average MSE: ' num2str(mean(dtw_mse_95_p1(:)),formatSpec)]);
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
 
+linkaxes([ax1,ax2,ax3],'xy');
+
+xlim([min(n_components) max(n_components)]);
+ylim([min(sig_length) max(sig_length)]);
+
+sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
+
 ax4 = subplot(1,4,4);
 colorbar;
+clim([0 maxColor]);
 axis off;
 
 
 
 % join axes and set x and y lims to be the same
-linkaxes([ax1,ax2,ax3],'xy');
 
-xlim([min(n_components) max(n_components)]);
-ylim([min(sig_length) max(sig_length)]);
 set(gcf, 'Position', [0, 0, 1280, 720]);
-sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
-
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_pa.png');
 
@@ -710,12 +693,13 @@ semilogx(snr,baseline_snr,"LineWidth",2);
 semilogx(snr,frac_peak_snr,"LineWidth",2);
 semilogx(snr,peak_lat_snr,"LineWidth",2);
 semilogx(snr,peak_area_snr,"LineWidth",2);
-xlim([snrs(1), snrs(end)])
+xlim([snr(1), snr(end)])
 % add at least 5 xticks
-xticks([0.2,0.3,0.4, 0.5,0.6,0.7,0.8,0.9,1,1.5,2,3,5,6,7,8,9,10])
+xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
 xlabel('SNR');
 ylabel('MSE');
-title('MSE for Different Methods and SNR');
+title('MSE vs SNR for Different Methods');
 legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
+set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\mse_snr.png');
