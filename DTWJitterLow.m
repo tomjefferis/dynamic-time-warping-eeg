@@ -1,4 +1,4 @@
-function [ERP1,baseSignal,grandAVG] = DTWJitterLow(jitter,siglen,fs,trials,component_amplitude,component_widths,snr,n_components)
+function [ERP1,baseSignal,grandAVG,jitters] = DTWJitterLow(jitter,siglen,fs,trials,component_amplitude,component_widths,snr,n_components)
 
     siglen = siglen*fs;
     erp = [];
@@ -9,8 +9,11 @@ function [ERP1,baseSignal,grandAVG] = DTWJitterLow(jitter,siglen,fs,trials,compo
     epochs.length = siglen;       % their length in ms
     baseSignal = generate_signal_fromclass(erp, epochs);
 
-    erp.peakLatencyShift = jitter*fs;
+    latencies = erp.peakLatency;
+
+    %erp.peakLatencyShift = jitter*fs;
     ERP1 = [];
+    jitters = [];
 
     for i = 1:trials
         epochs = struct();
@@ -18,6 +21,11 @@ function [ERP1,baseSignal,grandAVG] = DTWJitterLow(jitter,siglen,fs,trials,compo
         epochs.srate = fs;        % their sampling rate in Hz
         epochs.length = siglen;       % their length in ms
         epochs.epochNumber = i;
+
+         
+        jitter_amount = randi([-jitter*fs, jitter*fs]);
+        jitters = [jitters jitter_amount];
+        erp.peakLatency = latencies + jitter_amount;
 
         ERP = generate_signal_fromclass(erp, epochs);
         noise = struct( ...

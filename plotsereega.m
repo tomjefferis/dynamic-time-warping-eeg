@@ -398,7 +398,7 @@ axis off;
 
 % join axes and set x and y lims to be the same
 
-sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
+sgtitle('MSE for Different DTW Metrics, Latency Differences and Number of Components');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_lat_comp_dtw.png');
@@ -443,7 +443,7 @@ linkaxes([ax1,ax2,ax3],'xy');
 
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
-sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
+sgtitle('MSE for Different DTW Metrics, Latency Differences and Length of Signal');
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -493,7 +493,7 @@ linkaxes([ax1,ax2,ax3],'xy');
 
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
-sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
+sgtitle('MSE for Different DTW Metrics, Number of Components and Length of Signal');
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -550,7 +550,7 @@ linkaxes([ax1,ax2,ax3],'xy');
 
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(n_components) max(n_components)]);
-sgtitle('MSE for Different DTW Metrics and Latency Differences and Number of Components');
+sgtitle('MSE for Latency Metrics, Latency Differences and Number of Components');
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -600,7 +600,7 @@ linkaxes([ax1,ax2,ax3],'xy');
 
 xlim([min(latency_difference) max(latency_difference)]);
 ylim([min(sig_length) max(sig_length)]);
-sgtitle('MSE for Different DTW Metrics and Latency Differences and Length of Signal');
+sgtitle('MSE for Latency Metrics, Latency Differences and Length of Signal');
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -657,7 +657,7 @@ linkaxes([ax1,ax2,ax3],'xy');
 xlim([min(n_components) max(n_components)]);
 ylim([min(sig_length) max(sig_length)]);
 
-sgtitle('MSE for Different DTW Metrics and Number of Components and Length of Signal');
+sgtitle('MSE for Latency Metrics, Number of Components and Length of Signal');
 
 ax4 = subplot(1,4,4);
 colorbar;
@@ -703,3 +703,20 @@ legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviat
 set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\mse_snr.png');
+
+figure;
+semilogx(snr,dtw_median_snr,"LineWidth",2);
+hold on;
+semilogx(snr,dtw_weighted_median_snr,"LineWidth",2);
+semilogx(snr,dtw_95_snr,"LineWidth",2);
+xlim([snr(1), snr(end)])
+% add at least 5 xticks
+xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
+xlabel('SNR');
+ylabel('MSE');
+title('MSE vs SNR for DTW Methods');
+legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Location','northeastoutside');
+set(gca, 'FontSize', 14)
+set(gcf, 'Position', [0, 0, 1280, 720]);
+saveas(gcf,'Results\mse_snr_DTW.png');
+
