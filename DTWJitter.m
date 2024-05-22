@@ -12,7 +12,7 @@ jitter_amount = 0.05; % how much jitter to add to the components in seconds
 n_signals_generate = 5000; % how many ERP signals to generate
 sig_len = 0.5; % signal length in seconds
 fs = 1000; % sample rate
-snr = 2; % signal to noise ratio
+snr = 0; % signal to noise ratio
 
 
 % using matlab batch for the loop
