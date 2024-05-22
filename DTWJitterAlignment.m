@@ -12,7 +12,7 @@ jitter_amount = 0.1; % how much jitter to add to the components in seconds
 n_signals_generate = 5000; % how many ERP signals to generate
 sig_len = 0.5; % signal length in seconds
 fs = 1000; % sample rate
-snr = 10; % signal to noise ratio
+snr = 1; % signal to noise ratio
 
 
 [trials,baseSignal,grandAvg,jitters] = DTWJitterLow(jitter_amount,sig_len,fs,trials_per_ERP,component_amplitude,component_widths,snr,n_components);
@@ -66,7 +66,7 @@ for i = 1:size(trials, 1)
     plot(warped_trials(i, :));
 end
 
-filtered_warped = ft_preproc_bandpassfilter(mean(warped_trials, 1),fs,[1 60]);
+filtered_warped = ft_preproc_bandpassfilter(mean(warped_trials, 1),fs,[1 30]);
 unfiltered_warped = mean(warped_trials, 1);
 
 figure;
@@ -75,8 +75,17 @@ plot(baseSignal, 'LineWidth', 2);
 plot(filteredGA, 'LineWidth', 2);
 plot(unfiltered_warped, 'LineWidth', 2);
 plot(filtered_warped, 'LineWidth', 2);
-legend('Base signal', 'Filtered grand average', 'Mean of warped trials');
-title('Base signal, filtered grand average and mean of warped trials');
+%legend('Base signal', 'Filtered grand average', 'Mean of warped trials');
+%title('Base signal, filtered grand average and mean of warped trials');
 
-
+% display similarity between the base signal and the grand average
+[R,p] = corrcoef(baseSignal, filteredGA);
+disp('Correlation between base signal and grand average:');
+disp(R(1,2));
+[R,p] = corrcoef(baseSignal, filtered_warped);
+disp('Correlation between base signal and mean of warped trials:');
+disp(R(1,2));
+R = corrcoef(filteredGA, unfiltered_warped);
+disp('Correlation between grand average and mean of warped trials:');
+disp(R(1,2));
 
