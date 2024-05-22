@@ -10,6 +10,17 @@ function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
 %    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
 %end
 
+if ~isstruct(data1)
+    t1 = [];
+    t1.erp = data1';
+    data1 = t1;
+end
+if ~isstruct(data2)
+    t2 = [];
+    t2.erp = data2';
+    data2 = t2;
+end
+
 
 for i = 1:size(data1,2)
 
