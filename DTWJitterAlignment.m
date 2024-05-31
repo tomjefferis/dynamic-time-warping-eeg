@@ -4,7 +4,7 @@ addpath(genpath('W:\PhD\MatlabPlugins\fieldtrip-20210906')); % path to fieldtrip
 addpath funcs\
 
 %% Script config
-n_components = 3; % how many components to generate in a signal
+n_components = 4; % how many components to generate in a signal
 component_widths = 25:350; % width of the components, one value per component
 component_amplitude = [-3,3]; % amplitude of the components, one value per component
 trials_per_ERP = 50; % how many trials to generate per ERP
@@ -12,7 +12,7 @@ jitter_amount = 0.1; % how much jitter to add to the components in seconds
 n_signals_generate = 5000; % how many ERP signals to generate
 sig_len = 0.5; % signal length in seconds
 fs = 1000; % sample rate
-snr = 1; % signal to noise ratio
+snr = 2; % signal to noise ratio
 
 
 [trials,baseSignal,grandAvg,jitters] = DTWJitterLow(jitter_amount,sig_len,fs,trials_per_ERP,component_amplitude,component_widths,snr,n_components);
@@ -65,27 +65,28 @@ for i = 1:size(trials, 1)
 
     plot(warped_trials(i, :));
 end
-
+% not doing correlation because stnadndardisation 
 filtered_warped = ft_preproc_bandpassfilter(mean(warped_trials, 1),fs,[1 30]);
 unfiltered_warped = mean(warped_trials, 1);
-
+woddyWarped = woody(trials');
 figure;
 hold on;
 plot(baseSignal, 'LineWidth', 2);
 plot(filteredGA, 'LineWidth', 2);
 plot(unfiltered_warped, 'LineWidth', 2);
 plot(filtered_warped, 'LineWidth', 2);
-%legend('Base signal', 'Filtered grand average', 'Mean of warped trials');
+plot(woddyWarped, 'LineWidth', 2);
+legend('Base signal', 'Filtered grand average', 'Mean warped unfiltered','Mean warped filtered','Woody Filtering');
 %title('Base signal, filtered grand average and mean of warped trials');
 
 % display similarity between the base signal and the grand average
-[R,p] = corrcoef(baseSignal, filteredGA);
+R = dtw(filteredGA,baseSignal);
 disp('Correlation between base signal and grand average:');
-disp(R(1,2));
-[R,p] = corrcoef(baseSignal, filtered_warped);
+disp(R);
+R = dtw(filtered_warped,baseSignal);
+disp('Correlation between base signal and mean of warped trials filtered:');
+disp(R);
+R = dtw(unfiltered_warped,baseSignal);
 disp('Correlation between base signal and mean of warped trials:');
-disp(R(1,2));
-R = corrcoef(filteredGA, unfiltered_warped);
-disp('Correlation between grand average and mean of warped trials:');
-disp(R(1,2));
+disp(R);
 
