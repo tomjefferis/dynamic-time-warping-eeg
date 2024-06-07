@@ -52,7 +52,7 @@ ax2 = subplot(2,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -150,7 +150,7 @@ ax2 = subplot(2,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -250,7 +250,7 @@ ax2 = subplot(2,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -338,7 +338,7 @@ saveas(gcf,'Results\mse_3d_slices_lat_siglen_comp.png');
 % average is mean of all values
 
 % create table
-metrics = {'DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area'};
+metrics = {'DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area'};
 average = [mean(dtw_mse_median(:)),mean(dtw_mse_weighted_median(:)),mean(dtw_mse_95(:)),mean(baseline_mse(:)),mean(frac_peak_mse(:)),mean(peak_lat_mse(:)),mean(peak_area_mse(:))];
 std_dev = [std(dtw_mse_median(:)),std(dtw_mse_weighted_median(:)),std(dtw_mse_95(:)),std(baseline_mse(:)),std(frac_peak_mse(:)),std(peak_lat_mse(:)),std(peak_area_mse(:))];
 ranges = [range(dtw_mse_median(:)),range(dtw_mse_weighted_median(:)),range(dtw_mse_95(:)),range(baseline_mse(:)),range(frac_peak_mse(:)),range(peak_lat_mse(:)),range(peak_area_mse(:))];
@@ -374,7 +374,7 @@ ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -425,7 +425,7 @@ ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -475,7 +475,7 @@ ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -529,7 +529,7 @@ ax2 = subplot(1,4,2);
 surf(latency_difference,n_components,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -582,7 +582,7 @@ ax2 = subplot(1,4,2);
 surf(latency_difference,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -634,7 +634,7 @@ ax2 = subplot(1,4,2);
 surf(n_components,sig_length,dtw_mse_weighted_median_p1,'EdgeColor','none');
 view(2);
 shading interp;
-title('DTW Weighted Median');
+title('DTW Z-Weighted Median');
 zlabel('MSE');
 clim([0 maxColor]);
 subtitle(['Average MSE: ' num2str(mean(dtw_mse_weighted_median_p1(:)),formatSpec)]);
@@ -672,7 +672,7 @@ set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_pa.png');
 
-%% now plotting curves for increasing SNR, snr is x axis and mse is y axis, average all other dimensions, mean dimensions 5,4,3,2 and squeeze
+%% now plotting curves for increasing SNRM, snr is x axis and mse is y axis, average all other dimensions, mean dimensions 5,4,3,2 and squeeze
 dtw_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_median,5)),4)),3)),2)))');
 dtw_weighted_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_weighted_median,5)),4)),3)),2)))');
 dtw_95_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_95,5)),4)),3)),2)))');
@@ -696,10 +696,10 @@ semilogx(snr,peak_area_snr,"LineWidth",2);
 xlim([snr(1), snr(end)])
 % add at least 5 xticks
 xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
-xlabel('SNR');
+xlabel('SNRM');
 ylabel('MSE');
-title('MSE vs SNR for Different Methods');
-legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
+title('MSE vs SNRM for Different Methods');
+legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
 set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\mse_snr.png');
@@ -712,10 +712,10 @@ semilogx(snr,dtw_95_snr,"LineWidth",2);
 xlim([snr(1), snr(end)])
 % add at least 5 xticks
 xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
-xlabel('SNR');
+xlabel('SNRM');
 ylabel('MSE');
-title('MSE vs SNR for DTW Methods');
-legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Location','northeastoutside');
+title('MSE vs SNRM for DTW Methods');
+legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Location','northeastoutside');
 set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\mse_snr_DTW.png');

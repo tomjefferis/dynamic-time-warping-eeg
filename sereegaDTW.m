@@ -1,6 +1,5 @@
 %% adding paths
 addpath(genpath('SEREEGA-master\'))
-addpath(genpath('W:\PhD\MatlabPlugins\fieldtrip-20210906')); % path to fieldtrip
 addpath funcs\
 
 %% Script config
@@ -28,7 +27,7 @@ peak_lat_mse = ones(length(SNRs),length(sig_length), length(n_components), lengt
 peak_area_mse = ones(length(SNRs),length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
 
 
-for t = 1:length(SNRs)
+parfor t = 1:length(SNRs)
     SNR = SNRs(t);
 
     temp_dtw_mse_median = ones(length(sig_length), length(n_components), length(latency_difference), n_signals_generate);
@@ -89,12 +88,13 @@ for t = 1:length(SNRs)
                     noise2 = generate_signal_fromclass(noise, epochs);
                     data2_t = dat2 + noise2;
                     
-                    
+                    N = 2; 
+                    [B,A] = butter(N,[1 35]/(fs/2));
                     data = struct();
-                    data.erp = ft_preproc_bandpassfilter(data1,fs,[1 30])';
+                    data.erp = filter(B,A,data1)';
                     data2 = struct();
-                    data2.erp = ft_preproc_bandpassfilter(data2_t,fs,[1 30])';
-                    
+                    data2.erp = filter(B,A,data2_t)';
+
                     
                     % determine latency difference
                     [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(data2, data, fs);
@@ -117,7 +117,7 @@ for t = 1:length(SNRs)
             end
         end
     end
-    disp('Completed SNR: ' + string(t))
+    %disp('Completed SNR: ' + string(t))
     dtw_mse_median(t,:,:,:,:) = temp_dtw_mse_median;
     dtw_mse_weighted_median(t,:,:,:,:) = temp_dtw_mse_weighted_median;
     dtw_mse_95(t,:,:,:,:) = temp_dtw_mse_95;

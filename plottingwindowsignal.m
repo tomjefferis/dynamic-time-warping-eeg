@@ -24,7 +24,7 @@ load('Results\ChangingWindow\peak_lat_mse.mat')
 load('Results\ChangingWindow\params.mat')
 
 % table of MSE values, range, mean, std
-metrics = {'DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area'};
+metrics = {'DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area'};
 average = [mean(dtw_mse_median(:),'omitnan'),mean(dtw_mse_weighted_median(:),'omitnan'),mean(dtw_mse_95(:),'omitnan'),mean(baseline_mse(:),'omitnan'),mean(frac_peak_mse(:),'omitnan'),mean(peak_lat_mse(:),'omitnan'),mean(peak_area_mse(:),'omitnan')];
 std_dev = [std(dtw_mse_median(:),'omitnan'),std(dtw_mse_weighted_median(:),'omitnan'),std(dtw_mse_95(:),'omitnan'),std(baseline_mse(:),'omitnan'),std(frac_peak_mse(:),'omitnan'),std(peak_lat_mse(:),'omitnan'),std(peak_area_mse(:),'omitnan')];
 ranges = [range(dtw_mse_median(:),'omitnan'),range(dtw_mse_weighted_median(:),'omitnan'),range(dtw_mse_95(:),'omitnan'),range(baseline_mse(:),'omitnan'),range(frac_peak_mse(:),'omitnan'),range(peak_lat_mse(:),'omitnan'),range(peak_area_mse(:),'omitnan')];
@@ -67,7 +67,7 @@ clim(clims)
 
 subplot(2,4,2)
 surf(params.window_widths,params.latency_difference,dtw_mse_weighted_median)
-title('DTW Weighted Median')
+title('DTW Z-Weighted Median')
 shading interp
 view(2)
 MSE = nanmean(dtw_mse_weighted_median(:));
@@ -188,7 +188,7 @@ set(gca, 'FontSize', 14)
 xlabel('SNR')
 ylabel('MSE')
 title('MSE vs SNR for Different Methods');
-legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
+legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\ChangingWindow\mse_snr.png');
 
@@ -208,7 +208,7 @@ set(gca, 'FontSize', 14)
 xlabel('SNR')
 ylabel('MSE')
 title('MSE vs SNR for DTW Methods');
-legend('DTW Median','DTW Weighted Median','DTW 95th Percentile','Location','northeastoutside');
+legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Location','northeastoutside');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\ChangingWindow\mse_snr_DTW.png');
 

@@ -1,11 +1,10 @@
 %% adding paths
 addpath(genpath('SEREEGA-master\'))
-addpath(genpath('W:\PhD\MatlabPlugins\fieldtrip-20210906')); % path to fieldtrip
 addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 2000;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
@@ -26,7 +25,7 @@ frac_peak_mse = NaN(length(SNRs), length(latency_difference),length(window_width
 peak_lat_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 peak_area_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 
-for i = 1:length(SNRs)
+parfor i = 1:length(SNRs)
     SNR = SNRs(i);
     
     % temp arrays
@@ -45,7 +44,7 @@ for i = 1:length(SNRs)
             window_width = window_widths(k)*fs;
             
             
-            for n = 1:length(n_signals_generate)
+            for n = 1:n_signals_generate
 
                 erp = struct();
                 erp.peakAmplitude = [3,-6,3,-2,7];
@@ -73,64 +72,54 @@ for i = 1:length(SNRs)
                 
                 sig2 = generate_signal_fromclass(erp, epochs) + generate_signal_fromclass(noise, epochs);
                 
+                N = 2; 
+                [B,A] = butter(N,[1 35]/(fs/2));
                 data = struct();
-                data.erp = ft_preproc_bandpassfilter(sig1,fs,[1 30]);
+                data.erp = filter(B,A,sig1)';
                 data2 = struct();
-                data2.erp = ft_preproc_bandpassfilter(sig2,fs,[1 30]);
+                data2.erp = filter(B,A,sig2)';
 
-                % get baselines
-                baselinePeriod = [-0.1,0];
-                time = -0.1:1/fs:sig_length-0.1;
-                time = time(1:end-1);
-                cfg = [];
-                cfg.baseline = baselinePeriod;
-                cfg.parameter = 'erp';
-                data.time = time;
-                data2.time = time;
-                data.dimord = 'chan_time';
-                data2.dimord = 'chan_time';
-                data.label = {'A23'};
-                data2.label = {'A23'};
-
-                data = ft_timelockbaseline(cfg, data);
-                data2 = ft_timelockbaseline(cfg, data2);
-                
-                data.erp = data.erp';
-                data2.erp = data2.erp';
+                % baseline correct from [1:100]
+                b1 = data.erp(1:100);
+                b1 = mean(b1);
+                b2 = data2.erp(1:100);
+                b2 = mean(b2);
+                data.erp = data.erp - b1;
+                data2.erp = data2.erp - b2;
 
                 %% Implemented P1N1P3 ERP shape and move the P3 component, start window at 350ms 
-                window_location = 350;
-                for l = 1:length(window_location)
-                    window_start = window_location(l);
-                    window_end = window_start + round(window_width);
-                    
-                    sig1_window = struct();
-                    sig2_window = struct();
-                    sig1_window.erp = data.erp(window_start:window_end);
-                    sig2_window.erp = data2.erp(window_start:window_end);
-                    
-                    baselines = struct();
-                    baselines.one = data.erp(1:100);
-                    baselines.two = data2.erp(1:100);
+                window_start = 350;
+                window_end = window_start + round(window_width);
 
-                    % needa  way to add baseline in, maybe just append to
-                    % front for these methods?
-                    [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(sig2_window, sig1_window, fs);
-                    peakLat = peaklatency(sig2_window,sig1_window,fs);
-                    fracPeakLat = fracpeaklatency(sig2_window,sig1_window,fs);
-                    areaLat = peakArea(sig2_window,sig1_window,fs, 0.5, baselines);
-                    baselineLat = baselineDeviation(sig2_window,sig1_window,fs, baselines,2);
-
-                    temp_dtw_mse_median(j,k,l,n) = mean((dtw_median - latency_diff).^2);
-                    temp_dtw_mse_weighted_median(j,k,l,n) = mean((dtw_weighted_median - latency_diff).^2);
-                    temp_dtw_mse_95(j,k,l,n) = mean((dtw_95 - latency_diff).^2);
-                    temp_baseline_mse(j,k,l,n) = mean((baselineLat - latency_diff).^2);
-                    temp_frac_peak_mse(j,k,l,n) = mean((fracPeakLat - latency_diff).^2);
-                    temp_peak_lat_mse(j,k,l,n) = mean((peakLat - latency_diff).^2);
-                    temp_peak_area_mse(j,k,l,n) = mean((areaLat - latency_diff).^2);
-                                       
-                    
+                if window_end > length(data.erp)
+                    window_end = length(data.erp);
                 end
+                
+                sig1_window = struct();
+                sig2_window = struct();
+                sig1_window.erp = data.erp(window_start:window_end);
+                sig2_window.erp = data2.erp(window_start:window_end);
+                
+                baselines = struct();
+                baselines.one = data.erp(1:100);
+                baselines.two = data2.erp(1:100);
+
+                % needa  way to add baseline in, maybe just append to
+                % front for these methods?
+                [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(sig2_window, sig1_window, fs);
+                peakLat = peaklatency(sig2_window,sig1_window,fs);
+                fracPeakLat = fracpeaklatency(sig2_window,sig1_window,fs);
+                areaLat = peakArea(sig2_window,sig1_window,fs, 0.5, baselines);
+                baselineLat = baselineDeviation(sig2_window,sig1_window,fs, baselines,2);
+
+                temp_dtw_mse_median(j,k,n) = mean((dtw_median - latency_diff).^2);
+                temp_dtw_mse_weighted_median(j,k,n) = mean((dtw_weighted_median - latency_diff).^2);
+                temp_dtw_mse_95(j,k,n) = mean((dtw_95 - latency_diff).^2);
+                temp_baseline_mse(j,k,n) = mean((baselineLat - latency_diff).^2);
+                temp_frac_peak_mse(j,k,n) = mean((fracPeakLat - latency_diff).^2);
+                temp_peak_lat_mse(j,k,n) = mean((peakLat - latency_diff).^2);
+                temp_peak_area_mse(j,k,n) = mean((areaLat - latency_diff).^2);
+                                       
             end
         end
     end
