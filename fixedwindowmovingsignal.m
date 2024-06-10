@@ -123,6 +123,7 @@ parfor i = 1:length(SNRs)
             end
         end
     end
+    disp('Completed SNR: ' + string(SNR))
     dtw_mse_median(i,:,:,:) = temp_dtw_mse_median;
     dtw_mse_weighted_median(i,:,:,:) = temp_dtw_mse_weighted_median;
     dtw_mse_95(i,:,:,:) = temp_dtw_mse_95;

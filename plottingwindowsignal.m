@@ -185,9 +185,9 @@ xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
 %fontsize 14
 set(gca, 'FontSize', 14)
 
-xlabel('SNR')
+xlabel('SNRM')
 ylabel('MSE')
-title('MSE vs SNR for Different Methods');
+title('MSE vs SNRM for Different Methods');
 legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\ChangingWindow\mse_snr.png');
@@ -205,9 +205,9 @@ xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
 %fontsize 14
 set(gca, 'FontSize', 14)
 
-xlabel('SNR')
+xlabel('SNRM')
 ylabel('MSE')
-title('MSE vs SNR for DTW Methods');
+title('MSE vs SNRM for DTW Methods');
 legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Location','northeastoutside');
 set(gcf, 'Position', [0, 0, 1280, 720]);
 saveas(gcf,'Results\ChangingWindow\mse_snr_DTW.png');
