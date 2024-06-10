@@ -12,7 +12,7 @@ comp2 = {};
 
 
 erp = struct();
-erp.peakAmplitude = [3,-6,3,-2,7];
+erp.peakAmplitude = [2,-3,2,-1,8];
 erp.peakLatency = [200,270,320,360,650];
 erp.peakWidth = [65,70,56,55,600];
 erp.peakAmplitudeDv = [0.2,0.2,0.2,0.2,0.2];
@@ -55,7 +55,7 @@ end
 noise = struct( ...
     'type', 'noise', ...
     'color', 'pink', ...
-    'amplitude', max(abs(erp.peakAmplitude))*0.4);
+    'amplitude', max(abs(erp.peakAmplitude))*0.5);
 noise = utl_check_class(noise);
 
 c = struct();

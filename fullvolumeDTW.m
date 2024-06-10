@@ -3,7 +3,7 @@ addpath(genpath('SEREEGA-master\'))
 addpath funcs\
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
-n_participants = 20;
+n_participants = 18;
 length = 1;
 fs = 1000;
 offset = 0.1; %100ms
@@ -23,15 +23,20 @@ end
 
 
 cfg = [];
+cfg.baseline = [-0.1 0];
+for i = 1:numel(warpedLatencies)
+    warpedLatencies{i} = ft_timelockbaseline(cfg, warpedLatencies{i});
+end
+cfg = [];
 cfg.method = 'montecarlo';
 cfg.statistic = 'ft_statfun_depsamplesT';
 cfg.correctm = 'cluster';
-cfg.clusteralpha = 0.05;
+cfg.clusteralpha = 0.0025;
 cfg.clusterstatistic = 'maxsum';
 cfg.tail = 0;
 cfg.clustertail = 0;
-cfg.alpha = 0.025;
-cfg.numrandomization = 500;
+cfg.alpha = 0.001;
+cfg.numrandomization = 1000;
 cfg_neighbours = [];
 cfg_neighbours.method = 'distance';
 cfg_neighbours.layout = 'eeg1010.lay';
