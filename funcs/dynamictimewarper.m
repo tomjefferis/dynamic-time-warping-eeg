@@ -21,6 +21,13 @@ if ~isstruct(data2)
     data2 = t2;
 end
 
+if ~isfield(data1,'erp') && isfield(data1,'avg')
+    data1.erp = data1.avg';
+end
+if ~isfield(data2,'erp') && isfield(data2,'avg')
+    data2.erp = data2.avg';
+end
+
 
 for i = 1:size(data1,2)
 
