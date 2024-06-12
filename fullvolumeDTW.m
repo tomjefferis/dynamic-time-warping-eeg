@@ -1,12 +1,13 @@
 %% adding paths
-addpath(genpath('SEREEGA-master\'))
+addpath(genpath('SEREEGA\'))
 addpath funcs\
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
 n_participants = 18;
 length = 1;
 fs = 1000;
-offset = 0.1; %100ms
+offset = 0.05; %50ms
+baseline = 100; %first 100ms
 
 [data1,data2] = fullVolumeData(n_participants,length,fs,offset);
 
@@ -48,8 +49,8 @@ cfg.uvar = 1;
 stat = ft_timelockstatistics(cfg, warpedLatencies{:}, zeroDataFull{:});
 
 cfg = [];
-x = ft_timelockgrandaverage(cfg,data1{:})
-y = ft_timelockgrandaverage(cfg,data2{:})
+x = ft_timelockgrandaverage(cfg,data1{:});
+y = ft_timelockgrandaverage(cfg,data2{:});
 figure;
 plot(stat.time,x.avg(1,:),'LineWidth',2);
 hold on;

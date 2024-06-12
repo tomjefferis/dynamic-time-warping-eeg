@@ -1,7 +1,7 @@
 function [data1,data2] = fullVolumeData(n_participants,length,fs,offset)
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\external\eeglab\');
 
-config = struct('n', n_participants, 'srate', fs, 'length', length*fs);
+config = struct('n', n_participants, 'srate', fs, 'length', length*fs, 'useParallelPool',0);
 
 leadfield = lf_generate_fromnyhead('montage', 'S64');
 
@@ -12,7 +12,7 @@ comp2 = {};
 
 
 erp = struct();
-erp.peakAmplitude = [2,-3,2,-1,8];
+erp.peakAmplitude = [3,-4,3,-2,6];
 erp.peakLatency = [200,270,320,360,650];
 erp.peakWidth = [65,70,56,55,600];
 erp.peakAmplitudeDv = [0.2,0.2,0.2,0.2,0.2];
@@ -55,7 +55,7 @@ end
 noise = struct( ...
     'type', 'noise', ...
     'color', 'pink', ...
-    'amplitude', max(abs(erp.peakAmplitude))*0.5);
+    'amplitude', max(abs(erp.peakAmplitude))*0.1);
 noise = utl_check_class(noise);
 
 c = struct();
@@ -67,11 +67,15 @@ c = utl_check_component(c, leadfield);
 comp1{end+1} = c;
 comp2{end+1} = c;
 
+comp1 = cell2mat(comp1);
+comp1(6).source = sourcelocs;
 
+comp2 = cell2mat(comp2);
+comp2(6).source = sourcelocs;
 
 % simulating data
-data = generate_scalpdata(cell2mat(comp1), leadfield, config);
-data2 = generate_scalpdata(cell2mat(comp2), leadfield, config);
+data = generate_scalpdata(comp1, leadfield, config);
+data2 = generate_scalpdata(comp2, leadfield, config);
 
 epochs.n = n_participants;
 epochs.marker = 'event 1';

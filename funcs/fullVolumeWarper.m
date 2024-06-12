@@ -1,10 +1,12 @@
-function warpedLatencies = fullVolumeWarper(data1, data2, fs, windowSizes)
+function warpedLatencies = fullVolumeWarper(data1, data2, fs, windowSizes, baseline)
 % defines window and then steps through dtw for each electrode and window
 % assumes data1 is in the same order as data 2, i.e. data1(1) is the same participant as data2(1)
 
-% check if windowSize is passed in, if not set to 100ms
+% check if windowSize is passed in, if not iterate over multiple lengths
 if nargin < 4
-    windowSizes = [0.4] * fs; %100ms window
+    sigSize = length(data1{1}.time)/fs;
+    windowSizes = round([sigSize/10, sigSize/5,sigSize/3,sigSize/2] * fs); %100ms window
+    baseline = 100;
 end
 
 n_participants = length(data1);
@@ -36,6 +38,13 @@ parfor i = 1:n_participants
             
             data1_erp = zscore(data1_temp.avg(j,:));
             data2_erp = zscore(data2_temp.avg(j,:));
+
+            % baseline signal
+            data1_baseline = mean(data1_erp(1:baseline));
+            data2_baseline = mean(data2_erp(1:baseline));
+
+            data1_erp = data1_erp - data1_baseline;
+            data2_erp = data2_erp - data2_baseline;
             
             temp_warped = zeros(1, signalLength);
             
@@ -45,18 +54,18 @@ parfor i = 1:n_participants
                 % want to use K as the center of the window and zero pad if this window goes out of bounds
                 if k - windowSize < 1
                     % Case 1: Window goes out of bounds on the left side
-                    pad_left = abs(k - windowSize - 1);
-                    data1_window = [zeros(1, pad_left), data1_erp(1:k+windowSize)];
-                    data2_window = [zeros(1, pad_left), data2_erp(1:k+windowSize)];
+                    pad_left = abs(k - windowSize/2) - 1;
+                    data1_window = [zeros(1, pad_left), data1_erp(1:k+windowSize/2)];
+                    data2_window = [zeros(1, pad_left), data2_erp(1:k+windowSize/2)];
                 elseif k + windowSize > signalLength
                     % Case 2: Window goes out of bounds on the right side
-                    pad_right = k + windowSize - signalLength;
-                    data1_window = [data1_erp(k-windowSize:end), zeros(1, pad_right)];
-                    data2_window = [data2_erp(k-windowSize:end), zeros(1, pad_right)];
+                    pad_right = k + windowSize/2 - signalLength;
+                    data1_window = [data1_erp(k-windowSize/2:end), zeros(1, pad_right)];
+                    data2_window = [data2_erp(k-windowSize/2:end), zeros(1, pad_right)];
                 else
                     % Case 3: Window is within bounds
-                    data1_window = data1_erp(k-windowSize:k+windowSize);
-                    data2_window = data2_erp(k-windowSize:k+windowSize);
+                    data1_window = data1_erp(k-windowSize/2:k+windowSize/2);
+                    data2_window = data2_erp(k-windowSize/2:k+windowSize/2);
                 end
                 
                 % Perform dynamic time warping
