@@ -54,18 +54,18 @@ parfor i = 1:n_participants
                 % want to use K as the center of the window and zero pad if this window goes out of bounds
                 if k - windowSize < 1
                     % Case 1: Window goes out of bounds on the left side
-                    pad_left = abs(k - windowSize/2) - 1;
-                    data1_window = [zeros(1, pad_left), data1_erp(1:k+windowSize/2)];
-                    data2_window = [zeros(1, pad_left), data2_erp(1:k+windowSize/2)];
+                    pad_left = abs(k - round(windowSize/2)) - 1;
+                    data1_window = [zeros(1, pad_left), data1_erp(1:k+round(windowSize/2))];
+                    data2_window = [zeros(1, pad_left), data2_erp(1:k+round(windowSize/2))];
                 elseif k + windowSize > signalLength
                     % Case 2: Window goes out of bounds on the right side
-                    pad_right = k + windowSize/2 - signalLength;
-                    data1_window = [data1_erp(k-windowSize/2:end), zeros(1, pad_right)];
-                    data2_window = [data2_erp(k-windowSize/2:end), zeros(1, pad_right)];
+                    pad_right = k + round(windowSize/2) - signalLength;
+                    data1_window = [data1_erp(k-round(windowSize/2):end), zeros(1, pad_right)];
+                    data2_window = [data2_erp(k-round(windowSize/2):end), zeros(1, pad_right)];
                 else
                     % Case 3: Window is within bounds
-                    data1_window = data1_erp(k-windowSize/2:k+windowSize/2);
-                    data2_window = data2_erp(k-windowSize/2:k+windowSize/2);
+                    data1_window = data1_erp(k-round(windowSize/2):k+round(windowSize/2));
+                    data2_window = data2_erp(k-round(windowSize/2):k+round(windowSize/2));
                 end
                 
                 % Perform dynamic time warping

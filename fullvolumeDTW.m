@@ -3,10 +3,10 @@ addpath(genpath('SEREEGA\'))
 addpath funcs\
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
-n_participants = 18;
+n_participants = 18*2;
 length = 1;
 fs = 1000;
-offset = 0.05; %50ms
+offset = 0.07; %50ms
 baseline = 100; %first 100ms
 
 [data1,data2] = fullVolumeData(n_participants,length,fs,offset);
@@ -32,11 +32,11 @@ cfg = [];
 cfg.method = 'montecarlo';
 cfg.statistic = 'ft_statfun_depsamplesT';
 cfg.correctm = 'cluster';
-cfg.clusteralpha = 0.0025;
+cfg.clusteralpha = 0.05;
 cfg.clusterstatistic = 'maxsum';
 cfg.tail = 0;
 cfg.clustertail = 0;
-cfg.alpha = 0.001;
+cfg.alpha = 0.025;
 cfg.numrandomization = 1000;
 cfg_neighbours = [];
 cfg_neighbours.method = 'distance';
@@ -85,3 +85,6 @@ colorbar;
 title('Data');
 xlim([-0.1 0.9]);
 ylim([1 64]);
+
+
+print('hello brev')
