@@ -3,7 +3,7 @@ addpath(genpath('SEREEGA\'))
 addpath funcs\
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
-n_participants = 18*2;
+n_participants = 18*4;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
