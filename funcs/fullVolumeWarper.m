@@ -5,7 +5,7 @@ function warpedLatencies = fullVolumeWarper(data1, data2, fs, windowSizes, basel
 % check if windowSize is passed in, if not iterate over multiple lengths
 if nargin < 4
     sigSize = length(data1{1}.time)/fs;
-    windowSizes = round([sigSize/10, sigSize/5,sigSize/3,sigSize/2] * fs); %100ms window
+    windowSizes = round([sigSize/10,sigSize/5,sigSize/3] * fs); %100ms window
     baseline = 100;
 end
 

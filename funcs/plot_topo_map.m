@@ -15,7 +15,7 @@ if isfield(stat, 'posclusters') || isfield(stat, 'negclusters')
         negStat = 100;
     end
     
-    if posStat < negStat
+    if posStat <= negStat
         polarity = "positive";
     else
         polarity = "negative";
@@ -62,8 +62,15 @@ for i = 1:7
     if isnan(lower)
         lower = length(stat.time) - 1;
     end
-    
-    highlight = round(mean(clustermark(:, lower:upper), 2));
+    highlight = clustermark(:, lower:upper) == 1;
+    % sum to a single column
+    highlight = sum(highlight, 2);
+    % if highlight >1 set to 1
+    highlight(highlight > 1) = 1;
+    % if empty fill zeros
+    if isempty(highlight)
+        highlight = zeros(1, length(stat.label));
+    end
     highlight = stat.label(highlight == 1);
     
     % cfg for plot

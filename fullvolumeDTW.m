@@ -3,7 +3,7 @@ addpath(genpath('SEREEGA\'))
 addpath funcs\
 addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
 
-n_participants = 18*4;
+n_participants = 16;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
@@ -32,7 +32,7 @@ cfg = [];
 cfg.method = 'montecarlo';
 cfg.statistic = 'ft_statfun_depsamplesT';
 cfg.correctm = 'cluster';
-cfg.clusteralpha = 0.05;
+cfg.clusteralpha = 0.01;
 cfg.clusterstatistic = 'maxsum';
 cfg.tail = 0;
 cfg.clustertail = 0;
@@ -45,6 +45,7 @@ cfg.neighbours = ft_prepare_neighbours(cfg_neighbours, data1{1});
 cfg.design = [1:n_participants 1:n_participants; ones(1,n_participants) ones(1,n_participants)*2];
 cfg.ivar = 2;
 cfg.uvar = 1;
+cfg.latency = [0, 0.9];
 
 stat = ft_timelockstatistics(cfg, warpedLatencies{:}, zeroDataFull{:});
 
@@ -52,9 +53,9 @@ cfg = [];
 x = ft_timelockgrandaverage(cfg,data1{:});
 y = ft_timelockgrandaverage(cfg,data2{:});
 figure;
-plot(stat.time,x.avg(1,:),'LineWidth',2);
+plot(x.time,x.avg(1,:),'LineWidth',2);
 hold on;
-plot(stat.time,y.avg(1,:),'LineWidth',2);
+plot(x.time,y.avg(1,:),'LineWidth',2);
 
 figure;
 surf(stat.time, 1:64, stat.stat);
@@ -78,7 +79,7 @@ colormap('lines')
 plot_topo_map(stat, -0.1 , 1);
 
 figure;
-surf(stat.time, 1:64, x.avg);
+surf(x.time, 1:64, x.avg);
 shading interp;
 view(2);
 colorbar;
