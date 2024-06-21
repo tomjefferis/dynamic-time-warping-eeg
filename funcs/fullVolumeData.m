@@ -5,18 +5,18 @@ config = struct('n', n_participants, 'srate', fs, 'length', length*fs, 'useParal
 
 leadfield = lf_generate_fromnyhead('montage', 'S64');
 randCompNum = 20;
-sourcelocs = [[0 -100 -15]; [0 -90 -10]; [0 -85 0]; [0 -70 10]; [0 -50 80]; [0 0 0]];
+sourcelocs = [[0 -100 -15]; [0 -90 -10]; [0 -85 0]; [0 -80 10]; [0 -80 10]; [0 0 0]];
 
 comp1 = {};
 comp2 = {};
 
 
 erp = struct();
-erp.peakAmplitude = [2,-3,1,-1,3];
+erp.peakAmplitude = [1,-2,1,-1,-6]*-1;
 erp.peakLatency = [230,290,350,390,650];
 erp.peakWidth = [65,70,56,55,600];
-erp.peakAmplitudeDv = [0.5,0.5,0.5,0.5,0.0];
-erp.peakLatencyDv = [20,20,20,20,0];
+erp.peakAmplitudeDv = [0,0,0,0,0];
+erp.peakLatencyDv = [0,0,0,0,0];
 erp.probability = 1;
 erp.type = 'erp';
 erp.probabilitySlope = 0;
@@ -58,7 +58,7 @@ end
 noise = struct( ...
     'type', 'noise', ...
     'color', 'pink', ...
-    'amplitude', max(abs(erp.peakAmplitude))*0.1);
+    'amplitude', max(abs(erp.peakAmplitude)));
 noise = utl_check_class(noise);
 
 c = struct();
@@ -70,23 +70,9 @@ c = utl_check_component(c, leadfield);
 comp1{end+1} = c;
 comp2{end+1} = c;
 
-randComps = erp_get_class_random([1:3], [200:1000], [25:200], ...
-		[-0.5:.1:0.5], 'numClasses', randCompNum);
-randSource = lf_get_source_random(leadfield,randCompNum);
-c = utl_create_component(randSource, randComps, leadfield);
-
 comp1 = cell2mat(comp1);
-comp1 = orderfields(comp1, [1,3,2,4]);
-comp1 = [comp1, c];
-
-randComps = erp_get_class_random([1:3], [200:1000], [25:200], ...
-		[-0.5:.1:0.5], 'numClasses', randCompNum);
-randSource = lf_get_source_random(leadfield,randCompNum);
-c = utl_create_component(randSource, randComps, leadfield);
 
 comp2 = cell2mat(comp2);
-comp2 = orderfields(comp2, [1,3,2,4]);
-comp2 = [comp2 c];
 
 % simulating data
 data = generate_scalpdata(comp1, leadfield, config,'sensorNoise',max(abs(erp.peakAmplitude))*0.001,'useParallelPool',0);

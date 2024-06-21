@@ -10,7 +10,7 @@ else
 end
 
 
-n_participants = 8;
+n_participants = 16;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
@@ -39,7 +39,7 @@ cfg = [];
 cfg.method = 'montecarlo';
 cfg.statistic = 'ft_statfun_depsamplesT';
 cfg.correctm = 'cluster';
-cfg.clusteralpha = 0.01;
+cfg.clusteralpha = 0.05;
 cfg.clusterstatistic = 'maxsum';
 cfg.tail = 0;
 cfg.clustertail = 0;
@@ -57,12 +57,13 @@ cfg.latency = [0, 0.9];
 stat = ft_timelockstatistics(cfg, warpedLatencies{:}, zeroDataFull{:});
 
 cfg = [];
+wp = ft_timelockgrandaverage(cfg,warpedLatencies{:});
 x = ft_timelockgrandaverage(cfg,data1{:});
 y = ft_timelockgrandaverage(cfg,data2{:});
 figure;
-plot(x.time,x.avg(1,:),'LineWidth',2);
+plot(x.time,x.avg(63,:),'LineWidth',2);
 hold on;
-plot(x.time,y.avg(1,:),'LineWidth',2);
+plot(x.time,y.avg(63,:),'LineWidth',2);
 
 figure;
 surf(stat.time, 1:64, stat.stat);
@@ -86,7 +87,7 @@ colormap('lines')
 plot_topo_map(stat, -0.1 , 1);
 
 figure;
-surf(x.time, 1:64, x.avg);
+surf(x.time, 1:64, wp.avg);
 shading interp;
 view(2);
 colorbar;

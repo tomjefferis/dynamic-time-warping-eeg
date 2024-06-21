@@ -1,4 +1,4 @@
-function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
+function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs,zsc)
 % Dynamic Time Warper is a function that gets the DTW distance for the
 % electrode and computes the Fractional peak, peak, and area of the erp
 % component
@@ -9,6 +9,11 @@ function [maxlatmedian, maxlat, maxlat95] = dynamictimewarper(data1, data2, fs)
 %if ~contains(path,'W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
 %    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\preproc')
 %end
+if nargin < 3
+
+    zsc = true;
+
+end
 
 if ~isstruct(data1)
     t1 = [];
@@ -31,8 +36,14 @@ end
 
 for i = 1:size(data1,2)
 
-    [query] = zscore(data1.erp);
-    [reference] = zscore(data2.erp);
+    if zsc
+        [query] = zscore(data1.erp);
+        [reference] = zscore(data2.erp);
+    else
+        [query] = data1.erp;
+        [reference] = data2.erp;
+    end
+
 
     [~,ix,iy] = dtw(query,reference);
     latency = ix - iy; % doing x - y since if the horizontal distance was 0 that would mean x=y 
