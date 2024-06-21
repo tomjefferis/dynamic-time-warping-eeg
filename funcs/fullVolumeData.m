@@ -12,7 +12,7 @@ comp2 = {};
 
 
 erp = struct();
-erp.peakAmplitude = [3,-5,3,-2,6];
+erp.peakAmplitude = [2,-3,1,-1,3];
 erp.peakLatency = [230,290,350,390,650];
 erp.peakWidth = [65,70,56,55,600];
 erp.peakAmplitudeDv = [0.5,0.5,0.5,0.5,0.0];
@@ -89,8 +89,8 @@ comp2 = orderfields(comp2, [1,3,2,4]);
 comp2 = [comp2 c];
 
 % simulating data
-data = generate_scalpdata(comp1, leadfield, config,'sensorNoise',max(abs(erp.peakAmplitude))*0.001);
-data2 = generate_scalpdata(comp2, leadfield, config,'sensorNoise',max(abs(erp.peakAmplitude))*0.001);
+data = generate_scalpdata(comp1, leadfield, config,'sensorNoise',max(abs(erp.peakAmplitude))*0.001,'useParallelPool',0);
+data2 = generate_scalpdata(comp2, leadfield, config,'sensorNoise',max(abs(erp.peakAmplitude))*0.001,'useParallelPool',0);
 
 epochs.n = n_participants;
 epochs.marker = 'event 1';

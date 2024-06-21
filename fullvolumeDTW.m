@@ -1,9 +1,16 @@
 %% adding paths
-addpath(genpath('SEREEGA\'))
-addpath funcs\
-addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
+addpath(genpath('SEREEGA'))
+addpath funcs
 
-n_participants = 16;
+% if windows path
+if ispc
+    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
+else
+    addpath('/Volumes/Home/PhD/MatlabPlugins/fieldtrip-20240110'); % path to fieldtrip
+end
+
+
+n_participants = 8;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
