@@ -1,6 +1,6 @@
 function plots = plot_topo_map(stat, start_time, end_time)
 
-difference = linspace(start_time, end_time, 8); %amount of subplots in this
+difference = linspace(start_time, end_time, 16); %amount of subplots in this
 
 if isfield(stat, 'posclusters') || isfield(stat, 'negclusters')
     try
@@ -47,9 +47,9 @@ end
 figure;
 set(gcf, 'Position',  [100, 100, 1600, 400]);
 
-tiledlayout(1,7);
+tiledlayout(2,7);
 
-for i = 1:7
+for i = 1:15
     nexttile;
     %finding time window from the closest times in the series to the inputs
     lower = interp1(stat.time, 1:length(stat.time), difference(i), 'nearest');
