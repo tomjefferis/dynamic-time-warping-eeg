@@ -47,7 +47,7 @@ end
 figure;
 set(gcf, 'Position',  [100, 100, 1600, 400]);
 
-tiledlayout(2,7);
+tiledlayout(2,8);
 
 for i = 1:15
     nexttile;

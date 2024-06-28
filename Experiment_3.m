@@ -3,14 +3,11 @@ addpath(genpath('SEREEGA'))
 addpath funcs
 
 % if windows path
-if ispc
-    addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906'); % path to fieldtrip
-else
-    addpath('/Volumes/Home/PhD/MatlabPlugins/fieldtrip-20240110'); % path to fieldtrip
-end
+addpath('fieldtrip'); % path to fieldtrip
 
 
-n_participants = 16;
+
+n_participants = 20;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
@@ -64,6 +61,8 @@ figure;
 plot(x.time,x.avg(63,:),'LineWidth',2);
 hold on;
 plot(x.time,y.avg(63,:),'LineWidth',2);
+xlabel('Time (s)');
+ylabel('Voltage (uV)');
 
 figure;
 surf(stat.time, 1:64, stat.stat);
@@ -73,16 +72,8 @@ colorbar;
 title('Stat');
 xlim([-0.1 0.9]);
 ylim([1 64]);
-
-figure;
-surf(stat.time, 1:64, stat.posclusterslabelmat);
-shading interp;
-view(2);
-colorbar;
-title('Clusters');
-xlim([-0.1 0.9]);
-ylim([1 64]);
-colormap('lines')
+xlabel('Time (s)');
+ylabel('Electrode');
 
 plot_topo_map(stat, -0.1 , 1);
 
@@ -94,6 +85,6 @@ colorbar;
 title('Data');
 xlim([-0.1 0.9]);
 ylim([1 64]);
+xlabel('Time (s)');
+ylabel('Electrode');
 
-
-print('hello brev')

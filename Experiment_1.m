@@ -4,7 +4,7 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 1000;
+n_signals_generate = 5000;
 % Component parameters
 latency_difference = -0.1:0.05:0.1;
 n_components = 1:8;

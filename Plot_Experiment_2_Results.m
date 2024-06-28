@@ -1,6 +1,6 @@
 %% adding paths
 addpath(genpath('SEREEGA-master\'))
-addpath(genpath('\MatlabPlugins\fieldtrip-20210906')); % path to fieldtrip
+addpath(genpath('\MatlabPlugins\fieldtrip')); % path to fieldtrip
 addpath funcs\
 
 

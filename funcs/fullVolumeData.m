@@ -1,5 +1,5 @@
 function [data1,data2] = fullVolumeData(n_participants,length,fs,offset)
-addpath('W:\PhD\MatlabPlugins\fieldtrip-20210906\external\eeglab\');
+addpath('fieldtrip\external\eeglab\');
 
 config = struct('n', n_participants, 'srate', fs, 'length', length*fs, 'useParallelPool',0);
 
