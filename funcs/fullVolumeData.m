@@ -5,7 +5,7 @@ config = struct('n', n_participants, 'srate', fs, 'length', length*fs, 'useParal
 
 leadfield = lf_generate_fromnyhead('montage', 'S64');
 randCompNum = 20;
-sourcelocs = [[0 -100 -15]; [0 -90 -10]; [0 -85 0]; [0 -80 10]; [0 -80 10]; [0 0 0]];
+sourcelocs = [[0 -100 -15]; [0 -90 -10]; [0 -85 0]; [0 -80 10]; [0 0 20]; [0 0 0]];
 
 comp1 = {};
 comp2 = {};
