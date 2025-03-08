@@ -6,12 +6,13 @@ addpath(genpath('SEREEGA\'))
 
 fs = 1000; % sample rate
 sig_length = 1; % time in S
+maxlats = [-20,20];
 
 
 % participant group 1
-n_parts_1 = 8;
+n_parts_1 = 7;
 erp_1 = struct();
-erp_1.peakAmplitude = [3,-6,3,-2,7]/2;
+erp_1.peakAmplitude = [3,-6,3,-2,7]/1.5;
 erp_1.peakLatency = [220,300,330,380,670];
 erp_1.peakWidth = [65,70,56,55,600];
 erp_1.probability = 1;
@@ -20,7 +21,7 @@ erp_1.probabilitySlope = 0;
 erp_1 = utl_check_class(erp_1);
 
 % participant group 2
-n_parts_2 = 2;
+n_parts_2 = 3;
 erp_2 = struct();
 erp_2.peakAmplitude = erp_1.peakAmplitude*2;
 erp_2.peakLatency = erp_1.peakLatency + 50;
@@ -49,7 +50,7 @@ latency_offsets = [];
 
 for i = 1:n_parts_1
     erp_1_temp = erp_1;
-    latency_shift = randi([-20,20]);
+    latency_shift = randi(maxlats);
     latency_offsets = [latency_offsets; latency_shift];
     erp_1_temp.peakLatency = erp_1_temp.peakLatency + latency_shift;
 
@@ -65,7 +66,7 @@ end
 latency_offsets_2 = [];
 for i = 1:n_parts_2
     erp_2_temp = erp_2;
-    latency_shift = randi([-20,20]);
+    latency_shift = randi(maxlats);
     latency_offsets_2 = [latency_offsets_2; latency_shift];
     erp_2_temp.peakLatency = erp_2_temp.peakLatency + latency_shift;
 
