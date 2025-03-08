@@ -1,10 +1,10 @@
 %% adding paths
-addpath(genpath('SEREEGA-master\'))
+addpath(genpath('SEREEGA\'))
 addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 5000;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.01:0.1;
 SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
@@ -18,8 +18,8 @@ window_widths = sig_length/25:sig_length/25:sig_length-350/fs;
 
 % result arrays
 dtw_mse_median = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
-dtw_mse_weighted_median = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
-dtw_mse_95 = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+%dtw_mse_weighted_median = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
+%dtw_mse_95 = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 baseline_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 frac_peak_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
 peak_lat_mse = NaN(length(SNRs), length(latency_difference),length(window_widths), n_signals_generate);
@@ -30,8 +30,8 @@ parfor i = 1:length(SNRs)
     
     % temp arrays
     temp_dtw_mse_median = NaN( length(latency_difference),length(window_widths), n_signals_generate);
-    temp_dtw_mse_weighted_median = NaN( length(latency_difference),length(window_widths), n_signals_generate);
-    temp_dtw_mse_95 = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    %temp_dtw_mse_weighted_median = NaN( length(latency_difference),length(window_widths), n_signals_generate);
+    %temp_dtw_mse_95 = NaN( length(latency_difference),length(window_widths), n_signals_generate);
     temp_baseline_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
     temp_frac_peak_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
     temp_peak_lat_mse = NaN( length(latency_difference),length(window_widths), n_signals_generate);
@@ -106,15 +106,15 @@ parfor i = 1:length(SNRs)
 
                 % needa  way to add baseline in, maybe just append to
                 % front for these methods?
-                [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(sig2_window, sig1_window, fs);
+                [dtw_median, ~, ~] = dynamictimewarper(sig2_window, sig1_window, fs, true);
                 peakLat = peaklatency(sig2_window,sig1_window,fs);
                 fracPeakLat = fracpeaklatency(sig2_window,sig1_window,fs);
                 areaLat = peakArea(sig2_window,sig1_window,fs, 0.5, baselines);
                 baselineLat = baselineDeviation(sig2_window,sig1_window,fs, baselines,2);
 
                 temp_dtw_mse_median(j,k,n) = mean((dtw_median - latency_diff).^2);
-                temp_dtw_mse_weighted_median(j,k,n) = mean((dtw_weighted_median - latency_diff).^2);
-                temp_dtw_mse_95(j,k,n) = mean((dtw_95 - latency_diff).^2);
+                %temp_dtw_mse_weighted_median(j,k,n) = mean((dtw_weighted_median - latency_diff).^2);
+                %temp_dtw_mse_95(j,k,n) = mean((dtw_95 - latency_diff).^2);
                 temp_baseline_mse(j,k,n) = mean((baselineLat - latency_diff).^2);
                 temp_frac_peak_mse(j,k,n) = mean((fracPeakLat - latency_diff).^2);
                 temp_peak_lat_mse(j,k,n) = mean((peakLat - latency_diff).^2);
@@ -125,8 +125,8 @@ parfor i = 1:length(SNRs)
     end
     disp('Completed SNR: ' + string(SNR))
     dtw_mse_median(i,:,:,:) = temp_dtw_mse_median;
-    dtw_mse_weighted_median(i,:,:,:) = temp_dtw_mse_weighted_median;
-    dtw_mse_95(i,:,:,:) = temp_dtw_mse_95;
+    %dtw_mse_weighted_median(i,:,:,:) = temp_dtw_mse_weighted_median;
+    %dtw_mse_95(i,:,:,:) = temp_dtw_mse_95;
     baseline_mse(i,:,:,:) = temp_baseline_mse;
     frac_peak_mse(i,:,:,:) = temp_frac_peak_mse;
     peak_lat_mse(i,:,:,:) = temp_peak_lat_mse;
@@ -135,8 +135,8 @@ end
 
 % save results
 save('Results\ChangingWindow\dtw_mse_median.mat', 'dtw_mse_median')
-save('Results\ChangingWindow\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median')
-save('Results\ChangingWindow\dtw_mse_95.mat', 'dtw_mse_95')
+%save('Results\ChangingWindow\dtw_mse_weighted_median.mat', 'dtw_mse_weighted_median')
+%save('Results\ChangingWindow\dtw_mse_95.mat', 'dtw_mse_95')
 save('Results\ChangingWindow\baseline_mse.mat', 'baseline_mse')
 save('Results\ChangingWindow\frac_peak_mse.mat', 'frac_peak_mse')
 save('Results\ChangingWindow\peak_lat_mse.mat', 'peak_lat_mse')

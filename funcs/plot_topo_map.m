@@ -29,7 +29,7 @@ if isfield(stat, 'posclusters') || isfield(stat, 'negclusters')
     
     clustermark(clustermark > 1) = 0;
     
-    maxstat = max(max(stat.stat))/2;
+    maxstat = max(max(stat.stat))/3;
     minstat = min(min(stat.stat))/2;
     
     %replacing nans with 0 to not break function

@@ -3,11 +3,11 @@ addpath(genpath('SEREEGA'))
 addpath funcs
 
 % if windows path
-addpath('fieldtrip'); % path to fieldtrip
+addpath('W:\PhD\MatlabPlugins\fieldtrip-20240110'); % path to fieldtrip
+addpath('W:\PhD\MatlabPlugins\fieldtrip-20240110\external\eeglab');
 
 
-
-n_participants = 20;
+n_participants = 18;
 length = 1;
 fs = 1000;
 offset = 0.07; %50ms
@@ -36,11 +36,11 @@ cfg = [];
 cfg.method = 'montecarlo';
 cfg.statistic = 'ft_statfun_depsamplesT';
 cfg.correctm = 'cluster';
-cfg.clusteralpha = 0.025;
+cfg.clusteralpha = 0.01;
 cfg.clusterstatistic = 'maxsum';
 cfg.tail = 0;
 cfg.clustertail = 0;
-cfg.alpha = 0.05;
+cfg.alpha = 0.01; %% see https://www.fieldtriptoolbox.org/tutorial/cluster_permutation_timelock/#the-configuration-settings 
 cfg.numrandomization = 1000;
 cfg_neighbours = [];
 cfg_neighbours.method = 'distance';

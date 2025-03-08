@@ -672,7 +672,7 @@ set(gcf, 'Position', [0, 0, 1280, 720]);
 % save plot
 saveas(gcf,'Results\mse_3d_slices_comp_siglen_pa.png');
 
-%% now plotting curves for increasing SNRM, snr is x axis and mse is y axis, average all other dimensions, mean dimensions 5,4,3,2 and squeeze
+%% now plotting curves for increasing SNRD, snr is x axis and mse is y axis, average all other dimensions, mean dimensions 5,4,3,2 and squeeze
 dtw_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_median,5)),4)),3)),2)))');
 dtw_weighted_median_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_weighted_median,5)),4)),3)),2)))');
 dtw_95_snr = fliplr(squeeze(squeeze(mean(squeeze(mean(squeeze(mean(squeeze(mean(dtw_mse_95,5)),4)),3)),2)))');
@@ -696,9 +696,9 @@ semilogx(snr,peak_area_snr,"LineWidth",2);
 xlim([snr(1), snr(end)])
 % add at least 5 xticks
 xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
-xlabel('SNRM');
+xlabel('SNRD');
 ylabel('MSE');
-title('MSE vs SNRM for Different Methods');
+title('MSE vs SNRD for Different Methods');
 legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Baseline Deviation','Fractional Peak','Peak Latency','Fractional Area','Location','northeastoutside');
 set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);
@@ -712,9 +712,9 @@ semilogx(snr,dtw_95_snr,"LineWidth",2);
 xlim([snr(1), snr(end)])
 % add at least 5 xticks
 xticks([0.2,0.3,0.4, 0.5,0.75,1,1.5,2,3,5,10])
-xlabel('SNRM');
+xlabel('SNRD');
 ylabel('MSE');
-title('MSE vs SNRM for DTW Methods');
+title('MSE vs SNRD for DTW Methods');
 legend('DTW Median','DTW Z-Weighted Median','DTW 95th Percentile','Location','northeastoutside');
 set(gca, 'FontSize', 14)
 set(gcf, 'Position', [0, 0, 1280, 720]);

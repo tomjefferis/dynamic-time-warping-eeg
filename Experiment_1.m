@@ -4,17 +4,16 @@ addpath funcs\
 
 %% Script config
 % script parameters
-n_signals_generate = 5000;
+n_signals_generate = 1000;
 % Component parameters
 latency_difference = -0.1:0.05:0.1;
 n_components = 1:8;
 component_widths = 25:250;
 min_amplitude = -10;
 max_amplitude = 10;
-SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10]; % Signal to noise ratio, leaving at 0.3 for 'good looking' ERPs
+SNRs = [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9,1,1.5,2,3,4,5,6,7,8,10];
 fs = 1000; % sample rate
 sig_length = [0.2,0.4,0.5,0.6,0.7,0.8,1,1.25,1.5,1.75,2,2.5,3]; % time in S
-amplitude_variability = 0.1; % variability of amplitude, not implemented yet
 
 
 % result arrays
@@ -97,7 +96,7 @@ parfor t = 1:length(SNRs)
 
                     
                     % determine latency difference
-                    [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(data2, data, fs);
+                    [dtw_median, dtw_weighted_median, dtw_95] = dynamictimewarper(data2, data, fs, true);
                     peakLat = peaklatency(data2,data,fs);
                     fracPeakLat = fracpeaklatency(data2,data,fs);
                     areaLat = peakArea(data2,data,fs, 0.5, baselines);
