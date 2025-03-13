@@ -1,6 +1,8 @@
 function plots = plot_topo_map(stat, start_time, end_time)
 
-difference = linspace(start_time, end_time, 16); %amount of subplots in this
+difference = linspace(start_time, end_time, 10); %amount of subplots in this
+% print difference of differences to check if correct
+disp(diff(difference));
 
 if isfield(stat, 'posclusters') || isfield(stat, 'negclusters')
     try
@@ -45,11 +47,11 @@ else
     parameter2 = 'off';
 end
 figure;
-set(gcf, 'Position',  [100, 100, 1600, 400]);
+set(gcf, 'Position',  [100, 100, 1200, 1200]);
 
-tiledlayout(2,8);
+tiledlayout(3,3);
 
-for i = 1:15
+for i = 1:9
     nexttile;
     %finding time window from the closest times in the series to the inputs
     lower = interp1(stat.time, 1:length(stat.time), difference(i), 'nearest');
@@ -86,6 +88,7 @@ for i = 1:15
     cfg.parameter = parameter;
     cfg.figure = 'gcf';
     cfg.zlim = [minstat,maxstat];
+    cfg.comment = "xlim";
     
     %if i == 5
     %    cfg.colorbar = 'South'; % adds to every plot usually disabled, uness need figure with bar

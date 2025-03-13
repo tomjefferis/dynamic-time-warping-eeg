@@ -12,9 +12,17 @@ length = 1;
 fs = 1000;
 offset = 0.07; %50ms
 baseline = 100; %first 100ms
+fontsize = 16;
 
 [data1,data2] = fullVolumeData(n_participants,length,fs,offset);
 
+cfg = [];
+plotted_dat1 = ft_timelockgrandaverage(cfg, data1{:});
+plot_topo_map(plotted_dat1, -0.1 , 1);
+set(findall(gcf,'-property','FontSize'),'FontSize',fontsize);
+sgt = sgtitle("Topographic maps of simulated ERPs");
+sgt.FontSize = 24;
+saveas(gcf, 'topo_map_simulated_ERPs.png');
 
 warpedLatencies = fullVolumeWarper(data1, data2, fs);
 
@@ -76,6 +84,10 @@ xlabel('Time (s)');
 ylabel('Electrode');
 
 plot_topo_map(stat, -0.1 , 1);
+set(findall(gcf,'-property','FontSize'),'FontSize',fontsize);
+sgt = sgtitle("Topographic map of significant clusters DTW");
+sgt.FontSize = 24;
+saveas(gcf, 'topo_map_stat.png');
 
 figure;
 surf(x.time, 1:64, wp.avg);
