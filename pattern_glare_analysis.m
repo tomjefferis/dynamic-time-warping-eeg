@@ -16,7 +16,7 @@ ft_data_med = [];
 
 for i = 1:length(ft_data)
     %ft_data{i}.avg = (ft_data{i}.thin + ft_data{i}.thick)/2;
-    ft_data{i}.avg = ft_data{i}.thin;
+    ft_data{i}.avg = ft_data{i}.thick;
     ft_data_thin_thick{end+1} = ft_data{i};
     ft_data{i}.avg = ft_data{i}.med;
     ft_data_med{end+1} = ft_data{i};
@@ -91,9 +91,9 @@ for i = 1:length(ft_data_thin_thick)
     % zscore the data
     thickThin_series = zscore(thickThin_series);
     med_series = zscore(med_series);
-    plot(medAvg.time, thickThin_series, "LineWidth", 2)
+    p1 = plot(medAvg.time, thickThin_series, "LineWidth", 2);
     hold on
-    plot(medAvg.time,med_series,"LineWidth", 2)
+    p2 = plot(medAvg.time,med_series,"LineWidth", 2);
     xlim([-0.2, 0.256])
     ylim([-6, 6])
     xline(0.056, "--")
@@ -104,7 +104,18 @@ for i = 1:length(ft_data_thin_thick)
     cluster_end = peak_electrode.sig_end;
     patch([cluster_start, cluster_end, cluster_end, cluster_start], [-10, -10, 10, 10], 'black', 'FaceAlpha', 0.1, 'EdgeColor', 'none')
     title("Participant " + string(i) + " " + string(max_index(i)) + "ms")
+
+
 end
+subplot(6,6,length(ft_data_thin_thick)+1)
+hold on
+legend([p1, p2], {'Thick', 'Medium'})
+% turn off axes for this subplot to only show legend
+set(gca, 'Visible', 'off')
+% set legend position to be in the bottom right of the plot
+set(gca, 'Position', [0.8, 0.1, 0.1, 0.1])
+
+
 % set figure size to 1440p
 sgtitle("Timeseries plot for " + string(peak_electrode.electrode))
 set(gcf, 'Position', [0, 0, 2560, 1440])
