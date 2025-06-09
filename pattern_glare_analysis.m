@@ -44,7 +44,7 @@ cfg.baseline = [-0.2 0];
 for i = 1:numel(warpedLatencies)
     warpedLatencies{i} = ft_timelockbaseline(cfg, warpedLatencies{i});
 end
-cd C:\Users\Tom\Documents\GitHub\dynamic-time-warping-eeg
+cd C:\Users\tomje\Documents\GitHub\dynamic-time-warping-eeg
 save("Pattern_Glare_analysis_latencies.mat","warpedLatencies","-v7.3")
 cfg = [];
 cfg.feedback = 'no';
